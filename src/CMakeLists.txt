@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 11)
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
-add_library(dc SHARED dlfcn.c error.c fcntl.c netdb.c stdio.c stdlib.c unistd.c sys/mman.c sys/stat.c sys/socket.c)
+add_library(dc SHARED dc_lib/dlfcn.c dc_lib/error.c dc_lib/fcntl.c dc_lib/netdb.c dc_lib/stdio.c dc_lib/stdlib.c dc_lib/unistd.c dc_lib/sys/mman.c dc_lib/sys/stat.c dc_lib/sys/socket.c config.c config.h)
 target_compile_options(dc PRIVATE -Wpedantic -Wall -Wextra -fPIC)
 
 find_library(LIBDL dl)
@@ -19,8 +19,8 @@ if(LIBRT)
 endif()
 
 install(TARGETS dc DESTINATION lib)
-install(FILES dlfcn.h error.h fcntl.h netdb.h stdio.h stdlib.h unistd.h DESTINATION include/dc)
-install(FILES sys/mman.h sys/socket.h sys/stat.h DESTINATION include/dc/sys)
+install(FILES dc_lib/dlfcn.h dc_lib/error.h dc_lib/fcntl.h dc_lib/netdb.h dc_lib/stdio.h dc_lib/stdlib.h dc_lib/unistd.h DESTINATION include/dc)
+install(FILES dc_lib/sys/mman.h dc_lib/sys/socket.h dc_lib/sys/stat.h DESTINATION include/dc/sys)
 
 add_executable(server server.c)
 target_link_libraries(server dc -lm)
