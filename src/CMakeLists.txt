@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 11)
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
-add_library(dc SHARED dc_lib/dlfcn.c dc_lib/error.c dc_lib/fcntl.c dc_lib/netdb.c dc_lib/stdio.c dc_lib/stdlib.c dc_lib/unistd.c dc_lib/sys/mman.c dc_lib/sys/stat.c dc_lib/sys/socket.c config.c config.h)
+add_library(dc SHARED dc_lib/dlfcn.c dc_lib/error.c dc_lib/fcntl.c dc_lib/netdb.c dc_lib/stdio.c dc_lib/stdlib.c dc_lib/unistd.c dc_lib/sys/mman.c dc_lib/sys/stat.c dc_lib/sys/socket.c config/config.c config/config.h)
 target_compile_options(dc PRIVATE -Wpedantic -Wall -Wextra -fPIC)
 
 find_library(LIBDL dl)
@@ -26,6 +26,6 @@ add_executable(server server.c)
 target_link_libraries(server dc -lm)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
-add_executable(client client.c)
+add_executable(client client.c http/request.c http/request.h http/response.c http/response.h)
 target_link_libraries(client dc -lm)
 target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
