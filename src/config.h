@@ -16,6 +16,7 @@ struct Config_S{
 };
 typedef struct Config_S* Config;
 
-Config create_config(char * path_404, char * root, size_t port, int concurr_opt, int ipc_opt);
+Config get_config();
+Config set_config(char * path_404, char * root, size_t port, int concurr_opt, int ipc_opt);
 void delete_config(Config this);
 #endif //DC_CONFIG_H
