@@ -7,6 +7,14 @@
 
 #include <stddef.h>
 
+#define CONCURR_OPT_THREAD 0
+#define CONCURR_OPT_PROCESS 1
+
+#define IPC_OPT_SOCKET 0
+#define IPC_OPT_PIPE 1
+#define IPC_OPT_SEMAPHORE 2
+#define IPC_OPT_SHAREMEM 3
+
 struct Config_S{
     char * path_404;
     char * root;

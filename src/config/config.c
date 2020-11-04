@@ -7,8 +7,8 @@ Config get_config(){
     this->path_404 = "/";
     this->root = "/";
     this->port = 80;
-    this->concurr_opt = 0;
-    this->ipc_opt = 0;
+    this->concurr_opt = CONCURR_OPT_PROCESS;
+    this->ipc_opt = IPC_OPT_SOCKET;
     return this;
 }
 
