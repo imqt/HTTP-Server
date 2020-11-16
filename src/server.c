@@ -1,14 +1,11 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include "dc_lib/sys/socket.h"
+#include "dc_lib/unistd.h"
 #include "shared.h"
 
+#include <stdlib.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 #define BACKLOG 5
 
