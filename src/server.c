@@ -63,9 +63,9 @@ int main(int argc, const char * argv[])
 
                 // Send response to client
                 dc_write(cfd, response, strlen(response));
-                dc_write(STDOUT_FILENO, "\nC\n", 3);
+                // dc_write(STDOUT_FILENO, "\nC\n", 3);
                 // Print to server's terminal
-                dc_write(STDOUT_FILENO, response, strlen(response));
+                // dc_write(STDOUT_FILENO, response, strlen(response));
             }
   
         }
