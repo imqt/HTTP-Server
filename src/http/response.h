@@ -6,6 +6,7 @@
 #define DC_RESPONSE_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Return a dynamically allocated char array containing all characters from the given file.
