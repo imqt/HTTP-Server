@@ -1,52 +1,46 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/socket.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include "shared.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include "shared.h"
-#include <netdb.h>
+#include <unistd.h>
 
 
 int main(int argc, char *argv[])
 {
+    // Create the socket to connect to server
+    int sfd = dc_socket(AF_INET, SOCK_STREAM, 0);
+
+    // Identify the server socket
+    struct sockaddr_in serv_addr;
     struct hostent *hostinfo;
-    printf("1\n");
-    struct sockaddr_in addr;
-    int fd;
-    ssize_t num_read;
-    char buf[BUF_SIZE];
-        printf("2\n");
-
     hostinfo = gethostbyname("127.0.0.1");
+    memset(&serv_addr, 0, sizeof(struct sockaddr_in));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+    serv_addr.sin_addr = *(struct in_addr *) hostinfo->h_addr_list[0];
 
-    fd = dc_socket(AF_INET, SOCK_STREAM, 0);
-            printf("3\n");
+    // Does this go between bind and listen?
+    dc_connect(sfd, (struct sockaddr *)&serv_addr, sizeof(struct sockaddr_in));
 
-    memset(&addr, 0, sizeof(struct sockaddr_in));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(PORT);
-            printf("4\n");
-
-    addr.sin_addr = *(struct in_addr *) hostinfo->h_addr_list[0];
-            printf("5\n");
-
-    dc_connect(fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
-
-
-
-    while((num_read = dc_read(STDIN_FILENO, buf, BUF_SIZE)) > 0)
+    ssize_t request_len, reply_len;
+    char buf[BUF_SIZE], tmp[BUF_SIZE];
+    char end_code[5] = "end";
+    while((request_len = dc_read(STDIN_FILENO, buf, BUF_SIZE)) > 0)
     {
-        dc_write(fd, buf, num_read);
-        num_read = dc_read(fd, buf, BUF_SIZE);
-        dc_write(STDOUT_FILENO, buf, num_read);
+        dc_write(sfd, buf, request_len);
+
+        strncpy(tmp, buf, 3); if (strcmp(tmp, end_code) == 0) {break;}
+        
+        reply_len = dc_read(sfd, buf, BUF_SIZE);
+        dc_write(STDOUT_FILENO, buf, reply_len);
     }
-    
-    dc_close(fd);
+
+    dc_write(STDOUT_FILENO, "Closing sfd!\n", 14);
+
+    dc_close(sfd);
 
     return EXIT_SUCCESS;
 }
