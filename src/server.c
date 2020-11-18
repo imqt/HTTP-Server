@@ -1,5 +1,6 @@
 #include "dc_lib/sys/socket.h"
 #include "dc_lib/unistd.h"
+#include "http/request.h"
 #include "http/response.h"
 #include "shared.h"
 
@@ -13,10 +14,6 @@
 
 #define BACKLOG 5
 #define DEALERS 10
-
-int sfd;
-
-int parse_request(char request[]);
 
 void *dealer(void *vargp);
 
@@ -85,13 +82,4 @@ void *dealer(void *vargp) {
         } // end while
         dc_close(cfd); // Close client socket
     } // end for
-}
-
-
-int parse_request(char request[]) {
-    char GET_R[] = "GET";
-    for (int i = 0; i < 3; i++)
-        if (GET_R[i] != request[i])
-            return 0; // unsupported request
-    return 1; // GET request
 }
