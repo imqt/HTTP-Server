@@ -23,7 +23,7 @@ void *dealer(void *vargp);
 int main(int argc, const char * argv[])
 {
     // Create the socket
-    sfd = dc_socket(AF_INET, SOCK_STREAM, 0);
+    int sfd = dc_socket(AF_INET, SOCK_STREAM, 0);
 
     // Identify the socket
     struct sockaddr_in addr;
@@ -36,7 +36,7 @@ int main(int argc, const char * argv[])
     pthread_t thread_id;
 
     for (int i = 0; i < DEALERS; i++) {
-        pthread_create(&thread_id, NULL, dealer, NULL);
+        pthread_create(&thread_id, NULL, dealer, (void *) &sfd);
     } // currently, only the last thread_id is stored, might need to change for later
 
     pthread_join(thread_id, NULL); // wait for the last thread to end
@@ -48,10 +48,11 @@ int main(int argc, const char * argv[])
 
 
 void *dealer(void *vargp) {
-    dc_listen(sfd, BACKLOG);
+    int *sfd = (int *) vargp;
+    dc_listen(*sfd, BACKLOG);
     for(;;)
     {
-        int cfd = dc_accept(sfd, NULL, NULL);
+        int cfd = dc_accept(*sfd, NULL, NULL);
 
         // Deal with client request:
         char client_request[BUF_SIZE]; 
