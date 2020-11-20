@@ -30,3 +30,9 @@ target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 add_executable(client client.c http/request.c http/request.h http/response.c http/response.h)
 target_link_libraries(client dc -lm)
 target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
+
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
+
+add_executable(editconfig editconfig.c)
+target_link_libraries(editconfig ${CURSES_LIBRARIES})
