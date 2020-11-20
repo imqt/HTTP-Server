@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/http/request.c.o CMakeFiles/client.dir/http/response.c.o -o client   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib:/home/kali/Desktop/HTTP-Server/src/build libdc.so -lm /usr/lib/x86_64-linux-gnu/libdl.so /usr/lib/x86_64-linux-gnu/librt.so 
