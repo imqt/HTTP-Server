@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/server.dir/server.c.o CMakeFiles/server.dir/server/thread_pool.c.o CMakeFiles/server.dir/http/response.c.o CMakeFiles/server.dir/http/request.c.o -o server   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib:/home/kali/Desktop/HTTP-Server/src/build libdc.so -lm -lpthread /usr/lib/x86_64-linux-gnu/libdl.so /usr/lib/x86_64-linux-gnu/librt.so 
