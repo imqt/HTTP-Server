@@ -60,14 +60,12 @@ void *dealer(void *vargp) {
             dc_write(STDOUT_FILENO, client_request, request_len);  
 
             // Parse the client_request for info
-            int request_code = parse_request(client_request);
+            char file_name[BUF_SIZE] = "../../rsc/";
+            int request_code = parse_request(client_request, file_name);
             // TODO: ^^
             dc_write(STDOUT_FILENO, "\nAfter parse_request\n", 23);
-
+			dc_write(STDOUT_FILENO, file_name, strlen(file_name));
             if (request_code) {
-
-                char file_name[] = "../../rsc/404.html";
-
                 // Constuct a reponse:
                 char response[4096] = ""; // TODO: change this to dynamic memory 
                 construct_response(response, get_content(file_name), 200);
