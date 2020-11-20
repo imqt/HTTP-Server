@@ -63,20 +63,27 @@ void *dealer(void *vargp) {
             char file_name[BUF_SIZE] = "../../rsc/";
             int request_code = parse_request(client_request, file_name);
             // TODO: ^^
-            dc_write(STDOUT_FILENO, "\nAfter parse_request\n", 23);
+            dc_write(STDOUT_FILENO, "\n///////////////////////////After parse_request\n", 50);
 			dc_write(STDOUT_FILENO, file_name, strlen(file_name));
-            if (request_code) {
-                // Constuct a reponse:
-                char response[4096] = ""; // TODO: change this to dynamic memory 
-                construct_response(response, get_content(file_name), 200);
-                dc_write(STDOUT_FILENO, "\nAFter construct_response\n", 28);
 
+            if (request_code) {
+            	char response[4096] = ""; // TODO: change this to dynamic memory 
+
+            	if (realpath(file_name, NULL)!= NULL) {
+	                // Constuct a reponse:
+	                construct_response(response, get_content(file_name), 200);
+            	} else {
+            		// TODO: differentiate between handling html not found and videos/images not found
+            		construct_response(response, get_content("../../rsc/404.html"), 200);
+            	}
+                dc_write(STDOUT_FILENO, "\n//////////////////////AFter construct_response\n", 50);
                 // Send response to client
                 dc_write(cfd, response, strlen(response));
-                dc_write(STDOUT_FILENO, "\nAFter responding\n", 20);
+                dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
                 // Print to server's terminal
                 dc_write(STDOUT_FILENO, response, strlen(response));
             }
+
         } // end while
         dc_close(cfd); // Close client socket
     } // end for
