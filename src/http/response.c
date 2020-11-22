@@ -1,8 +1,5 @@
-//
-// Created by wuviv on 2020-11-04.
-//
-
 #include "response.h"
+#include <stdlib.h>
 
 char * get_content( char file_name[]) {
     char * buffer = 0;

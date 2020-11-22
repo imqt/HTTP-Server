@@ -22,11 +22,10 @@ install(TARGETS dc DESTINATION lib)
 install(FILES dc_lib/dlfcn.h dc_lib/error.h dc_lib/fcntl.h dc_lib/netdb.h dc_lib/stdio.h dc_lib/stdlib.h dc_lib/unistd.h DESTINATION include/dc)
 install(FILES dc_lib/sys/mman.h dc_lib/sys/socket.h dc_lib/sys/stat.h DESTINATION include/dc/sys)
 
-add_executable(server server.c server/thread_pool.c server/thread_pool.h server/threads.h http/response.c http/response.h)
-#server/process_pool.c server/process_pool.h
+add_executable(server server.c server/thread_pool.c server/thread_pool.h server/threads.h http/response.c http/response.h server/process_pool.c server/process_pool.h server/shared_mutex.c server/shared_mutex.h)
 target_link_libraries(server dc -lm pthread)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
-add_executable(client client.c http/request.c http/request.h http/response.c http/response.h)
+add_executable(client client.c http/response.c http/response.h)
 target_link_libraries(client dc -lm)
 target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
