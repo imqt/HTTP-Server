@@ -34,5 +34,6 @@ target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
-add_executable(editconfig editconfig.c)
-target_link_libraries(editconfig ${CURSES_LIBRARIES})
+add_executable(editconfig editconfig.c editconfig.h ncurses/page.c ncurses/page.h ncurses/line.c ncurses/line.h)
+target_link_libraries(editconfig ${CURSES_LIBRARIES} -lncurses)
+target_compile_options(editconfig PRIVATE -Wpedantic -Wall -Wextra)

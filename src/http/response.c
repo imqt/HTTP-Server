@@ -45,12 +45,12 @@ void get_reason(char dest[], int status_code) {
     }
 }
 
-void construct_response(char response[], char *content, int status_code, int content_type_code) {
-    char httpver[] = "HTTP/1.0 ";                       //  9
+void construct_head(char response[], char *content, int status_code, int content_type_code) {
+    char httpver[] = "HTTP/1.0 ";
     char status_reason[100];
         get_reason(status_reason, status_code);
-    char content_type[] = "\r\nContent-Type: ";  // 24
-    char content_length[] = "\r\nContent-Length: ";         // 16
+    char content_type[] = "\r\nContent-Type: ";
+    char content_length[] = "\r\nContent-Length: ";
     char len[9] = "";
         snprintf(len, sizeof(len), "%ld", strlen(content));
 
@@ -69,13 +69,39 @@ void construct_response(char response[], char *content, int status_code, int con
             strcat(response, favicon); break;
         default:
             strcat(response, textPlain); break;
-
     }
 
-    strcat(response, content_length); 
+    strcat(response, content_length);
     strcat(response, len);  //TODO: int to string
     strcat(response, "\r\n\r\n");
+}
+
+void construct_response(char response[], char *content, int status_code, int content_type_code) {
+    construct_head(response, content, status_code, content_type_code);
     strcat(response, content);
 
     free(content);
 }
+
+// Audio    audio/mpeg
+//          audio/mpeg3
+//          audio/x-ms-wma
+//          audio/vnd.rn-realaudio
+//          audio/x-wav
+
+// Image    image/gif
+//          image/jpeg
+//          image/png
+//          image/tiff
+//          image/vnd.microsoft.icon
+//          image/x-icon
+//          image/vnd.djvu
+//          image/svg+xml
+
+// Text     text/css  so apparently most text stuffs can just be sent as text/html
+//          text/csv
+//          text/html
+//          text/javascript (obsolete)
+//          text/plain
+//          text/xml
+
