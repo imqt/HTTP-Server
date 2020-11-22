@@ -27,12 +27,16 @@ add_executable(server server.c server/thread_pool.c server/thread_pool.h server/
 target_link_libraries(server dc -lm pthread)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
-add_executable(client client.c http/request.c http/request.h http/response.c http/response.h)
+add_executable(client client.c http/request.c http/request.h http/response.c http/response.h ncurses/line.c ncurses/line.h ncurses/page.c ncurses/page.h editconfig.h)
 target_link_libraries(client dc -lm)
 target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
 
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
-add_executable(editconfig editconfig.c)
-target_link_libraries(editconfig ${CURSES_LIBRARIES})
+add_executable(editconfig ncurses/line.c ncurses/line.h ncurses/page.c ncurses/page.h editconfig.c editconfig.h )
+target_link_libraries(editconfig ${CURSES_LIBRARIES} -ltinfo -lncurses)
+#target_include_directories(editconfig ${CURSES_INCLUDE_DIR})
+
+#target_compile_options(editconfig PRIVATE -Wpedantic -Wall -Wextra)
+

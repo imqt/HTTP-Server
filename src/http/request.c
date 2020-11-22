@@ -59,8 +59,6 @@ int find_last_dot_before_space(char request[], int start_index) {
 
 
 int get_method(char request[]) {
-	int result = 0;
-
     return (strncmp(request, GET_R,  strlen(GET_R))  == 0) ? GETC
          : (strncmp(request, HEAD_R, strlen(HEAD_R)) == 0) ? HEADC
     								  	                   : 0;

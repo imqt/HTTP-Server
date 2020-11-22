@@ -69,7 +69,6 @@ void construct_response(char response[], char *content, int status_code, int con
             strcat(response, favicon); break;
         default:
             strcat(response, textPlain); break;
-
     }
 
     strcat(response, content_length); 

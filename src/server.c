@@ -15,7 +15,7 @@
 #define BACKLOG 5
 #define DEALERS 10
 
-void *dealer(void *vargp);
+_Noreturn void *dealer(void *vargp);
 
 int main(int argc, const char * argv[])
 {
@@ -44,7 +44,7 @@ int main(int argc, const char * argv[])
 }
 
 
-void *dealer(void *vargp) {
+_Noreturn void *dealer(void *vargp) {
     int *sfd = (int *) vargp;
     dc_listen(*sfd, BACKLOG);
     for(;;)
@@ -69,23 +69,22 @@ void *dealer(void *vargp) {
 			dc_write(STDOUT_FILENO, file_name, strlen(file_name));
 
             if (request_code) {
-            	char response[BUF_SIZE] = "";
+                char response[BUF_SIZE] = "";
 
-            	if (realpath(file_name, NULL)!= NULL) {
-	                // Constuct a reponse:
-	                construct_response(response, get_content(file_name), 200, content_type_code);
-            	} else {
-            		// TODO: differentiate between handling html not found and videos/images not found
-            		construct_response(response, get_content("../../rsc/404.html"), 404, content_type_code);
-            	}
+                if (realpath(file_name, NULL) != NULL) {
+                    // Constuct a reponse:
+                    construct_response(response, get_content(file_name), 200, content_type_code);
+                } else {
+                    // TODO: differentiate between handling html not found and videos/images not found
+                    construct_response(response, get_content("../../rsc/404.html"), 404, content_type_code);
+                }
                 dc_write(STDOUT_FILENO, "\n//////////////////////AFter construct_response\n", 50);
                 // Send response to client
                 dc_write(cfd, response, strlen(response));
                 // Print to server's terminal
                 dc_write(STDOUT_FILENO, response, strlen(response));
-            	dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
+                dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
             }
-
         } // end while
         dc_close(cfd); // Close client socket
     } // end for
