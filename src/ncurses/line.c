@@ -1,45 +1,50 @@
-//
-// Created by hans on 2020-11-21.
-//
-
 #include "line.h"
 
-// Initializes the a line.
-void init_line(line* line) {
-    line->size = LINE_SIZE;
-    line->line = (char *)malloc(LINE_SIZE * sizeof(char));
-    line->line[0] = '\0';
-}
+void init_line(LINE *s)
+{
+	s->size = LINE_SIZE;
+	s->line = (char *)malloc(LINE_SIZE * sizeof(char));
+    s->line[0] = '\0';
+} // init_line
 
-// Inserts a character into the line.
-void insert_char(line* string, char character, int index) {
 
-    // Ensures the string size is long enough to add the char.
-    if (strlen(string->line) >= string->size - 2) {
-        int doubled_size = string->size * 2;
-        char *temp = (char *)malloc(doubled_size * sizeof(char));
-        strcpy(temp, string->line);
-        string->line = temp;
-        string->size = doubled_size;
-    }
+// Insert char into string. 
+void insert_char(LINE *s, char c, int index)
+{
+	int i;
 
-    // At index, pushes everything after down 1 spot.
-    for (int i = strlen(string->line); i >= index; i--) {
-        string->line[i+1] = string->line[i];
-    }
+	if(strlen(s->line) >= s->size - 2) expand(s);
 
-    // Puts the char in the empty spot.
-    string->line[index] = character;
-}
+	for(i = strlen(s->line); i >= index; i--)
+		s->line[i + 1] = s->line[i];
 
-// Delete a character.
-void delete_char(line* string, int index) {
-    int length = strlen(string->line);
-    for (int i = index; i < length; i++) {
-        string->line[i] = string->line[i + 1];
-    }
-}
+	s->line[index] = c;
+} // insert
 
-void add_char(line* string, char character) {
-    insert_char(string, character, strlen(string->line));
+
+
+void remove_char(LINE *s, int index)
+{
+		int i;
+		int len = strlen(s->line);
+		for(i = index; i < len; i++)
+			s->line[i] = s->line[i + 1];
+} // remove_char
+
+
+
+// expands size of line
+void expand(LINE *s)
+{
+	int new_size = s->size * 2;
+	char *temp = (char *)malloc(new_size * sizeof(char));
+	strcpy(temp, s->line);
+	free(s->line);
+	s->line = temp;
+	s->size = new_size;	
+} // expand
+
+void add_char(LINE *s, char c)
+{
+    insert_char(s, c, strlen(s->line));
 }
