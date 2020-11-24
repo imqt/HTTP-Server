@@ -74,6 +74,13 @@ int main(int argc, char *argv[])
 				{	// can only delete blank lines for now
 					remove_line(&page, y + y_offset);
 					move_up(&page, &x, &y);
+					int counter = 0;
+					while (page.text[y + y_offset + counter].line) {
+					    counter++;
+					}
+					for (int i = 0; i < counter; i++) {
+                        move_right(&page, &x, &y);
+					}
 				}
 				else if( x > 1 )
 				{
