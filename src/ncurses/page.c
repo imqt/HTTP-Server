@@ -1,86 +1,93 @@
-//
-// Created by hans on 2020-11-21.
-//
-
 #include "page.h"
 
-// Initializes empty page with given filename and size.
-void init_page(page* page, char* filename, int size) {
-    page->text = (line *)malloc(size * sizeof(line));
+void init_page(PAGE *p, char *filename, int size)
+{
+	p->text = (LINE *)malloc(size * sizeof(LINE));
 
-    for (int i = 0; i < size; i++) {
-        init_line(page->text + i);
+	int i;
+	for(i = 0; i < size; i++)
+	{
+		init_line(p->text + i);
+	}
+    strcpy(p->filename, filename);
+	p->numlines = 0;
+	p->size = size;
+} // init_page
+
+void dest_page(PAGE *p)
+{
+	int i;
+	for(i = 0; i < p->numlines; i++)
+	{
+		free(p->text[i].line); // maybe replace with dest_line()
+	}
+	free(p->text);
+} // dest_page
+
+// WARNING: Expansion function implemented but not tested
+void insert_line(PAGE *p, int index)
+{	
+	if( p->numlines >= p->size ) expand_page(p);
+	
+	LINE newline;
+	init_line(&newline);
+	newline.line[0] = '\0';
+	
+	int i;
+
+	for(i = p->numlines - 1; i >= index; i--)
+		p->text[i + 1] = p->text[i];
+
+	p->text[index] = newline;
+	(p->numlines)++;
+} // insert_line
+
+void remove_line(PAGE *p, int index)
+{
+	if( p->numlines > 1 )
+	{
+		free(p->text[index].line);
+	
+		int i;
+		for(i = index; i < p->numlines - 1; i++)
+		{
+			p->text[i] = p->text[i + 1];
+		}
+		(p->numlines)--;
+	}
+} // remove_line
+
+void expand_page(PAGE *p)
+{
+	int newsize = p->size * 2;
+	LINE *newline = malloc(newsize * sizeof(LINE));
+	
+	int i;
+	for(i = 0; i < p->size; i++) // copy old lines
+		newline[i] = p->text[i];
+	for(i = p->size; i < newsize; i++) // init new lines
+		init_line(newline + i);
+		
+	p->text = newline;
+	p->size = newsize;
+} // expand_page
+
+// NOTE: This moves the cursor to the end of the displayed text
+void print_page(const PAGE *p, int start, int end)
+{
+	int i, line;
+	for(i = start, line = 0; i < p->numlines && i < end; i++, line++)
+	{
+		move(line, 0);
+		clrtoeol();
+		printw(" %s", p->text[i].line);
+	}
+    if(start < end)
+    {
+        move(line, 0);   
+        clrtoeol(); // if we deleted a line this may be necessary
+        move(line-1, 1);
     }
+	refresh();
+} // print_page
 
-    strcpy(page->file_name, filename);
-    page->number_of_lines = 0;
-    page->size = size;
-}
-
-// Yeets(destroys) the page by freeing each line in the text.
-void destroy_page(page* page) {
-    for (int i = 0; i < page->number_of_lines; i++) {
-        free(page->text[i].line);
-    }
-    free(page->text);
-}
-
-void insert_line(page* page, int index) {
-    if (page->number_of_lines >= page->size) {
-        int doubled_size = page->size * 2;
-        line* new_line = malloc(doubled_size * sizeof(line));
-
-        for (int i = 0; i < page->size; i++) {
-            new_line[i] = page->text[i];
-        }
-        for (int i = page->size; i < doubled_size; i++) {
-            init_line(new_line + i);
-        }
-        page->text = new_line;
-        page->size = doubled_size;
-    }
-
-    line inserted_line;
-    init_line(&inserted_line);
-    inserted_line.line[0] = '\0';
-
-    for (int i = page->number_of_lines - 1; i >= index; i--) {
-        page->text[i + 1] = page->text[i];
-    }
-
-    page->text[index] = inserted_line;
-    page->number_of_lines += 1;
-}
-
-
-void remove_line(page* page, int index) {
-    if(page->number_of_lines > 1) {
-        free(page->text[index].line);
-
-        for (int i = index; i < page->number_of_lines - 1; i++) {
-            page->text[i] = page->text[i+1];
-        }
-
-        page->number_of_lines -= 1;
-    }
-}
-
-// Prints page & puts cursor at end.
-void print_page(const page *page, int start, int end) {
-
-//    // Prints each line inside the page construct.
-    int i, line;
-    for (i = start, line = 0; i < page->number_of_lines && i < end; i++, line++) {
-        move(line, 0);
-        clrtoeol();
-        printw(" %s", page->text[i].line);
-    }
-
-    // Moves cursor to the end of the displayed text.
-    if (start < end) {
-        move(line, 0);
-        clrtoeol();
-        move(line - 1, 1);
-    }
-    refresh();
-}
