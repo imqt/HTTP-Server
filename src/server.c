@@ -19,6 +19,12 @@ void *dealer(void *vargp);
 
 int main(int argc, const char * argv[])
 {
+
+	// Need to read config stuff here
+	// Initial server setup from config
+	int port = PORT;
+
+
     // Create the socket
     int sfd = dc_socket(AF_INET, SOCK_STREAM, 0);
 
@@ -51,42 +57,19 @@ void *dealer(void *vargp) {
     {
         int cfd = dc_accept(*sfd, NULL, NULL);
 
-        // Deal with client request:
         char client_request[BUF_SIZE]; 
         ssize_t request_len; 
         while((request_len = dc_read(cfd, client_request, BUF_SIZE)) > 0)
         {
-            // Print client request to stdout
-            dc_write(STDOUT_FILENO, "\n///////////////////////////////////New Request\n", 50);
-            dc_write(STDOUT_FILENO, client_request, request_len);  
-
-            // Parse the client_request for info
             char file_name[BUF_SIZE] = "../../rsc/";
             int content_type_code = 0;
-            int request_code = parse_request(client_request, file_name, &content_type_code);
-            // TODO: ^^
-            dc_write(STDOUT_FILENO, "\n///////////////////////////After parse_request\n", 50);
-			dc_write(STDOUT_FILENO, file_name, strlen(file_name));
+
+            int request_code = parse_request(client_request, file_name, &content_type_code, request_len);
 
             if (request_code) {
-            	char response[BUF_SIZE] = "";
-
-            	if (realpath(file_name, NULL)!= NULL) {
-	                // Constuct a reponse:
-	                construct_response(response, get_content(file_name), 200, content_type_code);
-            	} else {
-            		// TODO: differentiate between handling html not found and videos/images not found
-            		construct_response(response, get_content("../../rsc/404.html"), 404, content_type_code);
-            	}
-                dc_write(STDOUT_FILENO, "\n//////////////////////AFter construct_response\n", 50);
-                // Send response to client
-                dc_write(cfd, response, strlen(response));
-                // Print to server's terminal
-                dc_write(STDOUT_FILENO, response, strlen(response));
-            	dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
+            	respond(cfd, file_name, content_type_code);
             }
-
-        } // end while
-        dc_close(cfd); // Close client socket
-    } // end for
+        }
+        dc_close(cfd);
+    }
 }

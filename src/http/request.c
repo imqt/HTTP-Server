@@ -13,7 +13,11 @@ char ico[] = "ico";
 int find_last_dot_before_space(char request[], int start_index);
 
 
-int parse_request(char request[], char file_name[], int*content_type_code) {
+int parse_request(char request[], char file_name[], int*content_type_code, int request_len) {
+        // Print client request to stdout
+    dc_write(STDOUT_FILENO, "\n///////////////////////////////////New Request\n", 50);
+    dc_write(STDOUT_FILENO, request, request_len);  
+
 	int request_code = get_method(request);
 	if (request_code == 0) return 0;
 	int start_index = request_code; // 5 or 6 (get or head)
@@ -47,7 +51,9 @@ int parse_request(char request[], char file_name[], int*content_type_code) {
 	for (int i = start_index; i < (end_index); i++)
 		fprintf(stderr, "%c.", request[i]);
 	fprintf(stderr, "\nContent-type code: %d", *content_type_code);
-
+    
+    dc_write(STDOUT_FILENO, "\n///////////////////////////After parse_request\n", 50);
+	dc_write(STDOUT_FILENO, file_name, strlen(file_name));
 	return request_code;
 }
 

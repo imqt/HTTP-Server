@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include "../shared.h"
+#include "../dc_lib/unistd.h"
 
 // Return a dynamically allocated char array containing all characters from the given file.
 char * get_content( char file_name[]);
@@ -17,6 +20,8 @@ char * get_content( char file_name[]);
 // param: dest[]: a char array to store the status string
 // param: status_code: http reponse status code (200, 400, 404,...)
 void get_reason(char dest[], int status_code);
+
+void respond(int cfd, char * file_name, int content_type_code);
 
 void construct_head(char response[], char *content, int status_code, int content_type_code);
 

@@ -28,6 +28,24 @@ char * get_content( char file_name[]) {
     if (buffer) {
         return buffer;
     } else {}
+    return NULL;
+}
+
+void respond(int cfd, char * file_name, int content_type_code) {
+    char response[BUF_SIZE] = "";
+    if (realpath(file_name, NULL)!= NULL) {
+        // Constuct a reponse:
+        construct_response(response, get_content(file_name), 200, content_type_code);
+    } else {
+        // TODO: differentiate between handling html not found and videos/images not found
+        construct_response(response, get_content("../../rsc/404.html"), 404, content_type_code);
+    }
+    dc_write(STDOUT_FILENO, "\n//////////////////////AFter construct_response\n", 50);
+    // Send response to client
+    dc_write(cfd, response, strlen(response));
+    // Print to server's terminal
+    dc_write(STDOUT_FILENO, response, strlen(response));
+    dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
 }
 
 void get_reason(char dest[], int status_code) {
