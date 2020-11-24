@@ -1,0 +1,35 @@
+
+Procedure:
+./editconfig:
+	- which 404.html file?
+	- which root dir?
+	- which port?    
+	- threads or processes?
+	- IPC? Pipe or whatever the other ones are?
+
+	change the file directly
+	change the file through command line arguments
+	change the file through evn vars
+	change the file through ncurses - read - write
+
+	get_config()
+	set_config()
+
+./server
+	load config from config file
+		- which 404
+		- which root dir
+		- read port number
+		- threads or processes
+		- which IPC?
+	threads
+		listen - accept - deal:
+			parse request
+				parse method (get/head)
+				parse filename
+				parse content-type
+				read content into uint8_t
+			send response
+				send correct content-type
+				send uint8_t bytes instead of char
+

@@ -29,6 +29,7 @@ int main(int argc, const char * argv[])
     addr.sin_port = htons(PORT);
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
     dc_bind(sfd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
+    dc_listen(sfd, BACKLOG);
 
     pthread_t thread_id;
 
@@ -46,7 +47,6 @@ int main(int argc, const char * argv[])
 
 void *dealer(void *vargp) {
     int *sfd = (int *) vargp;
-    dc_listen(*sfd, BACKLOG);
     for(;;)
     {
         int cfd = dc_accept(*sfd, NULL, NULL);
