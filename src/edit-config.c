@@ -42,20 +42,20 @@ int main(int argc, char *argv[])
 		beg = 0 + y_offset;
 		end = WIN_SIZE + y_offset;
 		int ch = getch();
-		update_status("Press F4 to quit, F5 to save."); // default text
+		update_status("Press F4 to quit, F5 to save and F6 for both."); // default text
 		switch(ch)
 		{
 			case KEY_F(4):
-                if(prompt_yesno("Are you sure you want to quit?"))
-				    goto endnc;
-	            print_page(&page, beg, end);
-				break;
+			    goto endnc;
 			case KEY_F(5):
 				save_file(&page);
                 sprintf(status, "Saved.", page.filename);
 				update_status(status);
 				break;
-			case KEY_UP:
+		    case KEY_F(6):
+                save_file(&page);
+                goto endnc;
+            case KEY_UP:
 				move_up(&page, &x, &y);
 				break;
 			case KEY_DOWN:

@@ -8,7 +8,6 @@
 #include <ncurses.h> // -lncurses. declared in page.h
 
 #include "ncurses/page.h"
-#include "ncurses/prompt.h"
 
 void update_status(char *info);
 
