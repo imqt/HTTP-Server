@@ -1,6 +1,7 @@
 <html>
 <head>
-	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="icon" href="favicon.ico">
+
 	<style type="text/css">
 		body {
 			background-color: lightblue;
@@ -12,6 +13,10 @@
 
 		h3 {
 			color: grey;
+		}
+
+		img {
+			transition-duration: 2s;
 		}
 
 		img.jumpy {
@@ -51,14 +56,20 @@
 	<link rel="stylesheet" href="css/style.css">
 	<center>
 		<h1>ERROR 404</h1>
-		<img height="100" src="https://cdn.pixabay.com/photo/2020/10/16/14/40/among-us-5659730_1280.png" class="sus">
-		<img src="images/image.webp" onclick="playAudio('sounds/mysound.mp3')">
+		<img height="100" src="https://cdn.pixabay.com/photo/2020/10/16/14/40/among-us-5659730_1280.png" class="sus" id="yourImgId">
+		<!-- <img height="100" src="favicon.ico" id="yourImgId"> -->
 		<h3>The page you are trying to access does not exist at this location.</h3>
-		<script type="text/javascript">
-			function playAudio(url) {
-			  new Audio(url).play();
+	<!-- 	<script type="text/javascript">
+			var yourImg = document.getElementById("heigyourImgId");
+			var height = 200; 
+			while (height < 4000) {
+				setTimeout(() => {  console.log("World!"); }, 2000);
+				if(yourImg && yourImg.style) {
+			    	yourImg.style.height = height + "px";
+			    	height += 100;
+				}
 			}
-		</script>
+		</script> -->
 	</center>
 </body>
 </html>

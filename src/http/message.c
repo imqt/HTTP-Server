@@ -69,9 +69,9 @@ void msg_close(Message *msg){
 }
 
 void msg_print_chars(Message *msg){
-    int i;
+    size_t i;
     for(i = 0; i < msg->curr_size; i++){
-        for(uint8_t b = 1U <<8-1; b>0; b = b/2){
+        for(uint8_t b = 1U <<(8-1); b>0; b = b/2){
             fprintf(stderr, "%c",(msg->array[i]&b)>0);
         }
         fprintf(stderr," ");
