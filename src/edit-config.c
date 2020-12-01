@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 		switch(ch)
 		{
 			case KEY_F(4):
-                if(prompt_yesno("Are you sure you want to quitw?"))
+                if(prompt_yesno("Are you sure you want to quit?"))
 				    goto endnc;
 	            print_page(&page, beg, end);
 				break;
