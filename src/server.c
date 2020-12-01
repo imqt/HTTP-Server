@@ -37,6 +37,7 @@ int main(int argc, const char * argv[])
 
     for (int i = 0; i < DEALERS; i++) {
         pthread_create(&thread_id, NULL, dealer, (void *) &sfd);
+        // dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
     }
     pthread_join(thread_id, NULL); // wait for the last thread to end
 
@@ -44,7 +45,6 @@ int main(int argc, const char * argv[])
 
     return EXIT_SUCCESS;
 }
-
 
 void *dealer(void *vargp) {
     int *sfd = (int *) vargp;
