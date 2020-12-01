@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<style type="text/css">
+@font-face {
+  font-family: 'Prata';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/prata/v13/6xKhdSpbNNCT-vWI.ttf) format('truetype');
+}
+body {
+  display: grid;
+  place-content: start center;
+  background: midnightblue;
+  color: wheat;
+}
+.mc {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-flow: column wrap;
+  width: 90vw;
+  font: 1rem/1 prata, serif;
+  margin: 5vmin;
+}
+.i {
+  display: grid;
+  grid-template-columns: auto 1fr 1rem;
+  gap: 1ch;
+  padding: 0.5rem;
+  width: var(--item-width, auto);
+  height: 2rem;
+  box-sizing: border-box;
+}
+.i::before {
+  content: " ";
+  -webkit-box-ordinal-group: 2;
+          order: 1;
+  border-bottom: thin dotted currentcolor;
+  height: 1px;
+  align-self: center;
+}
+.i::after {
+  content: " ";
+  grid-column-end: -1;
+  -webkit-box-ordinal-group: 3;
+          order: 2;
+  background: var(--name);
+  border-radius: 50%;
+  border: thin solid currentcolor;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.i:hover::after {
+  -webkit-transform: scale(2);
+          transform: scale(2);
+  border-radius: 0;
+}
+
+</style>
+</head>
+<body>
+
+<!-- for native css multicol, see >> https://codepen.io/ycw/pen/bGwGJKv-->
+<div class="mc">
+  <div class="i" style="--name: aliceblue">aliceblue</div>
+  <div class="i" style="--name: antiquewhite">antiquewhite</div>
+  <div class="i" style="--name: aqua">aqua</div>
+  <div class="i" style="--name: aquamarine">aquamarine</div>
+  <div class="i" style="--name: azure">azure</div>
+  <div class="i" style="--name: beige">beige</div>
+  <div class="i" style="--name: bisque">bisque</div>
+  <div class="i" style="--name: black">black</div>
+  <div class="i" style="--name: blanchedalmond">blanchedalmond</div>
+  <div class="i" style="--name: blue">blue</div>
+  <div class="i" style="--name: blueviolet">blueviolet</div>
+  <div class="i" style="--name: brown">brown</div>
+  <div class="i" style="--name: burlywood">burlywood</div>
+  <div class="i" style="--name: cadetblue">cadetblue</div>
+  <div class="i" style="--name: chartreuse">chartreuse</div>
+  <div class="i" style="--name: chocolate">chocolate</div>
+  <div class="i" style="--name: coral">coral</div>
+  <div class="i" style="--name: cornflowerblue">cornflowerblue</div>
+  <div class="i" style="--name: cornsilk">cornsilk</div>
+  <div class="i" style="--name: crimson">crimson</div>
+  <div class="i" style="--name: cyan">cyan</div>
+  <div class="i" style="--name: darkblue">darkblue</div>
+  <div class="i" style="--name: darkcyan">darkcyan</div>
+  <div class="i" style="--name: darkgoldenrod">darkgoldenrod</div>
+  <div class="i" style="--name: darkgray">darkgray</div>
+  <div class="i" style="--name: darkgreen">darkgreen</div>
+  <div class="i" style="--name: darkgrey">darkgrey</div>
+  <div class="i" style="--name: darkkhaki">darkkhaki</div>
+  <div class="i" style="--name: darkmagenta">darkmagenta</div>
+  <div class="i" style="--name: darkolivegreen">darkolivegreen</div>
+  <div class="i" style="--name: darkorange">darkorange</div>
+  <div class="i" style="--name: darkorchid">darkorchid</div>
+  <div class="i" style="--name: darkred">darkred</div>
+  <div class="i" style="--name: darksalmon">darksalmon</div>
+  <div class="i" style="--name: darkseagreen">darkseagreen</div>
+  <div class="i" style="--name: darkslateblue">darkslateblue</div>
+  <div class="i" style="--name: darkslategray">darkslategray</div>
+  <div class="i" style="--name: darkslategrey">darkslategrey</div>
+  <div class="i" style="--name: darkturquoise">darkturquoise</div>
+  <div class="i" style="--name: darkviolet">darkviolet</div>
+  <div class="i" style="--name: deeppink">deeppink</div>
+  <div class="i" style="--name: deepskyblue">deepskyblue</div>
+  <div class="i" style="--name: dimgray">dimgray</div>
+  <div class="i" style="--name: dimgrey">dimgrey</div>
+  <div class="i" style="--name: dodgerblue">dodgerblue</div>
+  <div class="i" style="--name: firebrick">firebrick</div>
+  <div class="i" style="--name: floralwhite">floralwhite</div>
+  <div class="i" style="--name: forestgreen">forestgreen</div>
+  <div class="i" style="--name: fuchsia">fuchsia</div>
+  <div class="i" style="--name: gainsboro">gainsboro</div>
+  <div class="i" style="--name: ghostwhite">ghostwhite</div>
+  <div class="i" style="--name: gold">gold</div>
+  <div class="i" style="--name: goldenrod">goldenrod</div>
+  <div class="i" style="--name: gray">gray</div>
+  <div class="i" style="--name: green">green</div>
+  <div class="i" style="--name: greenyellow">greenyellow</div>
+  <div class="i" style="--name: grey">grey</div>
+  <div class="i" style="--name: honeydew">honeydew</div>
+  <div class="i" style="--name: hotpink">hotpink</div>
+  <div class="i" style="--name: indianred">indianred</div>
+  <div class="i" style="--name: indigo">indigo</div>
+  <div class="i" style="--name: ivory">ivory</div>
+  <div class="i" style="--name: khaki">khaki</div>
+  <div class="i" style="--name: lavender">lavender</div>
+  <div class="i" style="--name: lavenderblush">lavenderblush</div>
+  <div class="i" style="--name: lawngreen">lawngreen</div>
+  <div class="i" style="--name: lemonchiffon">lemonchiffon</div>
+  <div class="i" style="--name: lightblue">lightblue</div>
+  <div class="i" style="--name: lightcoral">lightcoral</div>
+  <div class="i" style="--name: lightcyan">lightcyan</div>
+  <div class="i" style="--name: lightgoldenrodyellow">lightgoldenrodyellow</div>
+  <div class="i" style="--name: lightgray">lightgray</div>
+  <div class="i" style="--name: lightgreen">lightgreen</div>
+  <div class="i" style="--name: lightgrey">lightgrey</div>
+  <div class="i" style="--name: lightpink">lightpink</div>
+  <div class="i" style="--name: lightsalmon">lightsalmon</div>
+  <div class="i" style="--name: lightseagreen">lightseagreen</div>
+  <div class="i" style="--name: lightskyblue">lightskyblue</div>
+  <div class="i" style="--name: lightslategray">lightslategray</div>
+  <div class="i" style="--name: lightslategrey">lightslategrey</div>
+  <div class="i" style="--name: lightsteelblue">lightsteelblue</div>
+  <div class="i" style="--name: lightyellow">lightyellow</div>
+  <div class="i" style="--name: lime">lime</div>
+  <div class="i" style="--name: limegreen">limegreen</div>
+  <div class="i" style="--name: linen">linen</div>
+  <div class="i" style="--name: magenta">magenta</div>
+  <div class="i" style="--name: maroon">maroon</div>
+  <div class="i" style="--name: mediumaquamarine">mediumaquamarine</div>
+  <div class="i" style="--name: mediumblue">mediumblue</div>
+  <div class="i" style="--name: mediumorchid">mediumorchid</div>
+  <div class="i" style="--name: mediumpurple">mediumpurple</div>
+  <div class="i" style="--name: mediumseagreen">mediumseagreen</div>
+  <div class="i" style="--name: mediumslateblue">mediumslateblue</div>
+  <div class="i" style="--name: mediumspringgreen">mediumspringgreen</div>
+  <div class="i" style="--name: mediumturquoise">mediumturquoise</div>
+  <div class="i" style="--name: mediumvioletred">mediumvioletred</div>
+  <div class="i" style="--name: midnightblue">midnightblue</div>
+  <div class="i" style="--name: mintcream">mintcream</div>
+  <div class="i" style="--name: mistyrose">mistyrose</div>
+  <div class="i" style="--name: moccasin">moccasin</div>
+  <div class="i" style="--name: navajowhite">navajowhite</div>
+  <div class="i" style="--name: navy">navy</div>
+  <div class="i" style="--name: oldlace">oldlace</div>
+  <div class="i" style="--name: olive">olive</div>
+  <div class="i" style="--name: olivedrab">olivedrab</div>
+  <div class="i" style="--name: orange">orange</div>
+  <div class="i" style="--name: orangered">orangered</div>
+  <div class="i" style="--name: orchid">orchid</div>
+  <div class="i" style="--name: palegoldenrod">palegoldenrod</div>
+  <div class="i" style="--name: palegreen">palegreen</div>
+  <div class="i" style="--name: paleturquoise">paleturquoise</div>
+  <div class="i" style="--name: palevioletred">palevioletred</div>
+  <div class="i" style="--name: papayawhip">papayawhip</div>
+  <div class="i" style="--name: peachpuff">peachpuff</div>
+  <div class="i" style="--name: peru">peru</div>
+  <div class="i" style="--name: pink">pink</div>
+  <div class="i" style="--name: plum">plum</div>
+  <div class="i" style="--name: powderblue">powderblue</div>
+  <div class="i" style="--name: purple">purple</div>
+  <div class="i" style="--name: rebeccapurple">rebeccapurple</div>
+  <div class="i" style="--name: red">red</div>
+  <div class="i" style="--name: rosybrown">rosybrown</div>
+  <div class="i" style="--name: royalblue">royalblue</div>
+  <div class="i" style="--name: saddlebrown">saddlebrown</div>
+  <div class="i" style="--name: salmon">salmon</div>
+  <div class="i" style="--name: sandybrown">sandybrown</div>
+  <div class="i" style="--name: seagreen">seagreen</div>
+  <div class="i" style="--name: seashell">seashell</div>
+  <div class="i" style="--name: sienna">sienna</div>
+  <div class="i" style="--name: silver">silver</div>
+  <div class="i" style="--name: skyblue">skyblue</div>
+  <div class="i" style="--name: slateblue">slateblue</div>
+  <div class="i" style="--name: slategray">slategray</div>
+  <div class="i" style="--name: slategrey">slategrey</div>
+  <div class="i" style="--name: snow">snow</div>
+  <div class="i" style="--name: springgreen">springgreen</div>
+  <div class="i" style="--name: steelblue">steelblue</div>
+  <div class="i" style="--name: tan">tan</div>
+  <div class="i" style="--name: teal">teal</div>
+  <div class="i" style="--name: thistle">thistle</div>
+  <div class="i" style="--name: tomato">tomato</div>
+  <div class="i" style="--name: turquoise">turquoise</div>
+  <div class="i" style="--name: violet">violet</div>
+  <div class="i" style="--name: wheat">wheat</div>
+  <div class="i" style="--name: white">white</div>
+  <div class="i" style="--name: whitesmoke">whitesmoke</div>
+  <div class="i" style="--name: yellow">yellow</div>
+  <div class="i" style="--name: yellowgreen">yellowgreen</div>
+</div>
+<script type="text/javascript">
+const ro = new ResizeObserver(entries => {
+    const { borderBoxSize } = entries[0];
+    const { inlineSize } = Array.isArray(borderBoxSize)
+        ? borderBoxSize[0]
+        : borderBoxSize;
+    // Checking for chrome as using a non-standard array 
+    
+    const col_width = 250; // px
+    const n_col = Math.min(5, Math.floor(inlineSize / col_width));
+    const n_item = el.children.length;
+    const item_height = el.children[0].offsetHeight;
+    const height = Math.ceil(n_item / n_col) * item_height;
+    el.style.height = `${height}px`;
+    el.style.setProperty('--item-width', `${inlineSize / n_col}px`);
+});
+const el = document.querySelector(".mc");
+ro.observe(el);
+</script>
+</body>
+</html>

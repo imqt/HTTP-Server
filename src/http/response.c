@@ -11,40 +11,57 @@ char imgWEBP[]     = "image/webp";
 char audioMPEG[]  = "audio/mpeg";
 char favicon[]  = "image/webp";
 
-char * get_content( char file_name[]) {
-    char * buffer = 0;
+void send_content(char file_name[], int cfd) {
+    uint8_t byte;
+        struct stat st;
+        int fd = open(file_name, O_RDONLY);
+        stat(file_name, &st);
+    ssize_t size = dc_read(fd, &byte, 1);
+    while (size > 0) {
+        dc_write(cfd, &byte, 1);
+        size = dc_read(fd, &byte, 1);
+    }
+    close(fd);
+}
+
+char * get_content_length( char file_name[]) {
+    char * len;
     long length;
     FILE * f = fopen(file_name, "rb");
     if (f) {
         fseek(f, 0, SEEK_END);
         length = ftell(f);
         fseek(f, 0, SEEK_SET);
-        buffer = malloc(length);
-    }
-    if (buffer) {
-        fread(buffer, 1, length, f);
+        len = malloc(8);
+        snprintf(len, sizeof(len), "%ld", length);
     }
     fclose(f);
-    if (buffer) {
-        return buffer;
-    } else {}
-    return NULL;
+    return len;
 }
+
 
 void respond(int cfd, char * file_name, int content_type_code) {
     char response[BUF_SIZE] = "";
+
     if (realpath(file_name, NULL)!= NULL) {
-        // Constuct a reponse:
-        construct_response(response, get_content(file_name), 200, content_type_code);
+        // Constuct a reponse when FILE EXISTS:
+        construct_head(response, get_content_length(file_name), 200, content_type_code);
+        // Send response to client
+        dc_write(cfd, response, strlen(response));
+        // Print to server's terminal
+        dc_write(STDOUT_FILENO, response, strlen(response));
+        send_content(file_name, cfd);
     } else {
         // TODO: differentiate between handling html not found and videos/images not found
-        construct_response(response, get_content("../../rsc/404.html"), 404, content_type_code);
+        construct_response(response, get_content_length("../../rsc/404.html"), 404, content_type_code);
+        // Send response to client
+        dc_write(cfd, response, strlen(response));
+        // Print to server's terminal
+        dc_write(STDOUT_FILENO, response, strlen(response));
+        send_content("../../rsc/404.html", cfd);
     }
-    dc_write(STDOUT_FILENO, "\n//////////////////////AFter construct_response\n", 50);
-    // Send response to client
-    dc_write(cfd, response, strlen(response));
-    // Print to server's terminal
-    dc_write(STDOUT_FILENO, response, strlen(response));
+
+
     dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
 }
 
@@ -63,19 +80,15 @@ void get_reason(char dest[], int status_code) {
     }
 }
 
-void construct_head(char response[], char *content, int status_code, int content_type_code) {
+void construct_head(char response[], char *content_length, int status_code, int content_type_code) {
     char httpver[] = "HTTP/1.0 ";
     char status_reason[100];
         get_reason(status_reason, status_code);
     char content_type[] = "\r\nContent-Type: ";
-    char content_length[] = "\r\nContent-Length: ";
-    char len[9] = "";
-        snprintf(len, sizeof(len), "%ld", strlen(content));
-
+    char content_l[] = "\r\nContent-Length: ";
     strcat(response, httpver);
     strcat(response, status_reason);
     strcat(response, content_type);
-
     switch(content_type_code) {
         case 0:
             strcat(response, textHTML); break;
@@ -88,38 +101,12 @@ void construct_head(char response[], char *content, int status_code, int content
         default:
             strcat(response, textPlain); break;
     }
-
+    strcat(response, content_l);
     strcat(response, content_length);
-    strcat(response, len);  //TODO: int to string
     strcat(response, "\r\n\r\n");
 }
 
-void construct_response(char response[], char *content, int status_code, int content_type_code) {
-    construct_head(response, content, status_code, content_type_code);
-    strcat(response, content);
-
-    free(content);
+void construct_response(char response[], char *content_length, int status_code, int content_type_code) {
+    construct_head(response, content_length, status_code, content_type_code);
+    free(content_length);
 }
-
-// Audio    audio/mpeg
-//          audio/mpeg3
-//          audio/x-ms-wma
-//          audio/vnd.rn-realaudio
-//          audio/x-wav
-
-// Image    image/gif
-//          image/jpeg
-//          image/png
-//          image/tiff
-//          image/vnd.microsoft.icon
-//          image/x-icon
-//          image/vnd.djvu
-//          image/svg+xml
-
-// Text     text/css  so apparently most text stuffs can just be sent as text/html
-//          text/csv
-//          text/html
-//          text/javascript (obsolete)
-//          text/plain
-//          text/xml
-

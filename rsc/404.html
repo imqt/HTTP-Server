@@ -1,11 +1,64 @@
 <html>
-<head><link rel="shortcut icon" href="/favicon.ico"><head>
-<script src="js/script.js"></script>
-<link rel="stylesheet" href="css/style.css">
-<center>
-<h1>ERROR 404</h1>
-<img height="100" src="https://cdn.pixabay.com/photo/2020/10/16/14/40/among-us-5659730_1280.png" class="sus">
-<!-- <img src="images/image.webp" onclick="playAudio('sounds/mysound.mp3')"> -->
-<h3>This page doesn't exist yet.</h3>
-</center>
+<head>
+	<link rel="shortcut icon" href="/favicon.ico">
+	<style type="text/css">
+		body {
+			background-color: lightblue;
+		}
+
+		h1 {
+			color: navy;
+		}
+
+		h3 {
+			color: grey;
+		}
+
+		img.jumpy {
+		    -webkit-animation: jumper 1s infinite  alternate;
+		    animation: jumper 1s infinite  alternate;
+		}
+
+		@-webkit-keyframes jumper {
+		    0% { -webkit-transform: translateY(0); }
+		    100% { -webkit-transform: translateY(-15px); }
+		}
+		@keyframes jumper {
+		    0% { transform: translateY(0); }
+		    100% { transform: translateY(-15px); }
+		}
+
+		img.sus {
+			-webkit-animation: spinner 2s infinite  alternate;
+		    animation: spinner 2s infinite  alternate;
+		}
+		@-webkit-keyframes spinner {
+		    0% { -webkit-transform: scaleX(-1); }
+		    50% { -webkit-transform: scaleX(-1); }
+		    60% { -webkit-transform: scaleX(1); }
+		    100% { -webkit-transform: scaleX(1); }
+		}
+		@keyframes spinner {
+		    0% { transform: scaleX(-1); }
+		    50% { transform: scaleX(-1); }
+		    60% { transform: scaleX(1); }
+		    100% { transform: scaleX(1);}
+		}
+	</style>
+<head>
+<body>
+	<script src="js/script.js"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<center>
+		<h1>ERROR 404</h1>
+		<img height="100" src="https://cdn.pixabay.com/photo/2020/10/16/14/40/among-us-5659730_1280.png" class="sus">
+		<img src="images/image.webp" onclick="playAudio('sounds/mysound.mp3')">
+		<h3>The page you are trying to access does not exist at this location.</h3>
+		<script type="text/javascript">
+			function playAudio(url) {
+			  new Audio(url).play();
+			}
+		</script>
+	</center>
+</body>
 </html>
