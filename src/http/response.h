@@ -22,6 +22,8 @@
 #include "../dc_lib/unistd.h"
 #include "message.h"
 
+void send_content(char file_name[], int cfd);
+
 char * get_content_length(char file_name[]);
 
 // Give the appropriate hardcoded status reponse.
@@ -30,7 +32,7 @@ char * get_content_length(char file_name[]);
 // param: status_code: http reponse status code (200, 400, 404,...)
 void get_reason(char dest[], int status_code);
 
-void respond(int cfd, char * file_name, int content_type_code);
+void respond(int cfd, char * file_name, int content_type_code, int request_code);
 
 void construct_head(char response[], char *content_length, int status_code, int content_type_code);
 

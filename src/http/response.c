@@ -11,38 +11,8 @@ char imgWEBP[]     = "image/webp";
 char audioMPEG[]  = "audio/mpeg";
 char favicon[]  = "image/webp";
 
-void send_content(char file_name[], int cfd) {
-    uint8_t byte;
-        struct stat st;
-        int fd = open(file_name, O_RDONLY);
-        stat(file_name, &st);
-    ssize_t size = dc_read(fd, &byte, 1);
-    while (size > 0) {
-        dc_write(cfd, &byte, 1);
-        size = dc_read(fd, &byte, 1);
-    }
-    close(fd);
-}
-
-char * get_content_length( char file_name[]) {
-    char * len;
-    long length;
-    FILE * f = fopen(file_name, "rb");
-    if (f) {
-        fseek(f, 0, SEEK_END);
-        length = ftell(f);
-        fseek(f, 0, SEEK_SET);
-        len = malloc(8);
-        snprintf(len, sizeof(len), "%ld", length);
-    }
-    fclose(f);
-    return len;
-}
-
-
-void respond(int cfd, char * file_name, int content_type_code) {
+void respond(int cfd, char * file_name, int content_type_code, int request_code) {
     char response[BUF_SIZE] = "";
-
     if (realpath(file_name, NULL)!= NULL) {
         // Constuct a reponse when FILE EXISTS:
         construct_head(response, get_content_length(file_name), 200, content_type_code);
@@ -50,7 +20,7 @@ void respond(int cfd, char * file_name, int content_type_code) {
         dc_write(cfd, response, strlen(response));
         // Print to server's terminal
         dc_write(STDOUT_FILENO, response, strlen(response));
-        send_content(file_name, cfd);
+        if (request_code == 5) { send_content(file_name, cfd); }
     } else {
         // TODO: differentiate between handling html not found and videos/images not found
         construct_response(response, get_content_length("../../rsc/404.html"), 404, content_type_code);
@@ -58,26 +28,15 @@ void respond(int cfd, char * file_name, int content_type_code) {
         dc_write(cfd, response, strlen(response));
         // Print to server's terminal
         dc_write(STDOUT_FILENO, response, strlen(response));
-        send_content("../../rsc/404.html", cfd);
+        if (request_code == 5) { send_content("../../rsc/404.html", cfd); }
     }
-
-
-    dc_write(STDOUT_FILENO, "\n//////////////////////////////AFter responding\n", 50);
+    dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
 }
 
-void get_reason(char dest[], int status_code) {
-    switch(status_code) {
-        case 200:
-            strcpy(dest, "200 OK"); break;
-        case 400: 
-            strcpy(dest, "400 Bad Request"); break;
-        case 404:  // html not found
-            strcpy(dest, "404 Not Found"); break; 
-        case 501:  // Requested method not implemented (POST, PUT, TRACE)
-            strcpy(dest, "501 Not Implemented"); break;
-        default:
-            strcpy(dest, ""); break;
-    }
+
+void construct_response(char response[], char *content_length, int status_code, int content_type_code) {
+    construct_head(response, content_length, status_code, content_type_code);
+    free(content_length);
 }
 
 void construct_head(char response[], char *content_length, int status_code, int content_type_code) {
@@ -106,7 +65,46 @@ void construct_head(char response[], char *content_length, int status_code, int 
     strcat(response, "\r\n\r\n");
 }
 
-void construct_response(char response[], char *content_length, int status_code, int content_type_code) {
-    construct_head(response, content_length, status_code, content_type_code);
-    free(content_length);
+void get_reason(char dest[], int status_code) {
+    switch(status_code) {
+        case 200:
+            strcpy(dest, "200 OK"); break;
+        case 400: 
+            strcpy(dest, "400 Bad Request"); break;
+        case 404:  // html not found
+            strcpy(dest, "404 Not Found"); break; 
+        case 501:  // Requested method not implemented (POST, PUT, TRACE)
+            strcpy(dest, "501 Not Implemented"); break;
+        default:
+            strcpy(dest, ""); break;
+    }
 }
+
+char * get_content_length( char file_name[]) {
+    char * len;
+    long length;
+    FILE * f = fopen(file_name, "rb");
+    if (f) {
+        fseek(f, 0, SEEK_END);
+        length = ftell(f);
+        fseek(f, 0, SEEK_SET);
+        len = malloc(8);
+        snprintf(len, 8, "%ld", length);
+    }
+    fclose(f);
+    return len;
+}
+
+void send_content(char file_name[], int cfd) {
+    uint8_t byte;
+        struct stat st;
+        int fd = open(file_name, O_RDONLY);
+        stat(file_name, &st);
+    ssize_t size = dc_read(fd, &byte, 1);
+    while (size > 0) {
+        dc_write(cfd, &byte, 1);
+        size = dc_read(fd, &byte, 1);
+    }
+    close(fd);
+}
+
