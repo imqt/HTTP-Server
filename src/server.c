@@ -81,15 +81,11 @@ int main(int argc, const char * argv[])
             perror("fork");
             exit(EXIT_FAILURE);
         } else if(child_pid == 0) { //Child
-            char *aaa = "HOHO";
-            dc_write(STDOUT_FILENO, aaa, strlen(aaa));
             pdealer(sfd);
             break;
         }   
     }
     do {
-        char *aaa = "HAHA\n";
-        dc_write(STDOUT_FILENO, aaa, strlen(aaa));
         wpid = waitpid(child_pid, &status, WUNTRACED);
         if (wpid == -1) {
             perror("waitpid");
