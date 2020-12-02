@@ -81,13 +81,11 @@ char * get_content_length( char file_name[]) {
     char * len;
     long length;
     FILE * f = fopen(file_name, "rb");
-    if (f) {
         fseek(f, 0, SEEK_END);
         length = ftell(f);
         fseek(f, 0, SEEK_SET);
         len = malloc(8);
         snprintf(len, 8, "%ld", length);
-    }
     fclose(f);
     return len;
 }

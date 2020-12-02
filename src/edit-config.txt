@@ -1,3 +1,20 @@
-Setting X:
-Here it goes.
-We did it!!
+###########
+EDIT-CONFIG
+###########
+To edit configuration, replace the values underneath each section.
+
+###SERVER_NAME###
+Team-7
+###PORT###
+49158
+###ROOT_FOLDER###
+./rsc/
+###CONNECTIONS###
+10
+###HOME_PAGE###
+index.html
+###404_FILE###
+404.html
+###Threads(1) or Processes(2)?###
+1
+yes

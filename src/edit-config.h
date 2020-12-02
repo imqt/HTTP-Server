@@ -1,3 +1,5 @@
+// Adapted from mazarf/editor on Github.
+
 #ifndef TEXT_H
 #define TEXT_H
 
@@ -8,7 +10,6 @@
 #include <ncurses.h> // -lncurses. declared in page.h
 
 #include "ncurses/page.h"
-#include "ncurses/prompt.h"
 
 void update_status(char *info);
 

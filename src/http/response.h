@@ -21,6 +21,7 @@
 #include "../shared.h"
 #include "../dc_lib/unistd.h"
 #include "message.h"
+#define BUF_SIZE 4096
 
 void send_content(char file_name[], int cfd);
 
