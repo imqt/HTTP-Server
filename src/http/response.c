@@ -40,7 +40,7 @@ void respond(int cfd, char * file_name, int content_type_code, int request_code)
         // dc_write(STDOUT_FILENO, "\n", 1);
 }
 
-void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
+void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]){
     char httpver[] = "HTTP/1.0 ";
     char status_reason[100];
     get_reason(status_reason, status_code);
@@ -49,13 +49,41 @@ void construct_head(char response[], char *content_length, int status_code, int 
     strcat(response, httpver);
     strcat(response, status_reason);
     strcat(response, content_type);
-    char ctt[BUF_SIZE];
-    get_content_type(file_name, ctt);
-    strcat(response, ctt);
+    switch(content_type_code) {
+    case 0:
+    strcat(response, textHTML); break;
+    case 1:
+    strcat(response, imgWEBP); break;
+    case 2:
+    strcat(response, audioMPEG); break;
+    case 3:
+    strcat(response, favicon); break;
+    default:
+    strcat(response, textPlain); break;
+    }
+    // char ctt[BUF_SIZE];
+    // get_content_type(file_name, ctt);
+    // strcat(response, ctt);
     strcat(response, content_l);
     strcat(response, content_length);
     strcat(response, "\r\n\r\n");
 }
+//void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
+//    char httpver[] = "HTTP/1.0 ";
+//    char status_reason[100];
+//    get_reason(status_reason, status_code);
+//    char content_type[] = "\r\nContent-Type: ";
+//    char content_l[] = "\r\nContent-Length: ";
+//    strcat(response, httpver);
+//    strcat(response, status_reason);
+//    strcat(response, content_type);
+//    char ctt[BUF_SIZE];
+//    get_content_type(file_name, ctt);
+//    strcat(response, ctt);
+//    strcat(response, content_l);
+//    strcat(response, content_length);
+//    strcat(response, "\r\n\r\n");
+//}
 
 
 void construct_response(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
@@ -105,7 +133,7 @@ void get_content_type(char* file_name,char *content_type) {
     dup2(pipefd[1], fileno(stdout));
 
     child_pid = fork();
-    if(child_pid == -1) { 
+    if(child_pid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
     } else if(child_pid == 0) { //Child
@@ -123,14 +151,14 @@ void get_content_type(char* file_name,char *content_type) {
             }
             fprintf(stderr, "child exited, status=%d\n", WEXITSTATUS(status));
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    } 
+    }
     // dc_write(STDOUT_FILENO, "", 1);
     fflush(stdout);//flushall();
     // write(pipefd[1], "good-bye", 9); // null-terminated string!
     close(pipefd[1]);
     dup2(stdout_bk, fileno(stdout));//restore
     char buf[101];
-    read(pipefd[0], buf, 100); 
+    read(pipefd[0], buf, 100);
     fprintf(stderr, "got this from the pipe >>>%s<<<\n", buf);
     strncpy(content_type, buf, strlen(buf)-1);
 }
