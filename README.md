@@ -6,7 +6,7 @@ Created by:
 |-|-|-|
 |[imqt](https://github.com/imqt)|Bui, Quoc Trung|A01071612|
 |[vvnwu](https://github.com/vvnwu)|Wu, Vivian|A01076716|
-|[hanssy130](https://github.com/hanssy130)hanssy130|Sy, Hans|A00892259|
+|[hanssy130](https://github.com/hanssy130)|Sy, Hans|A00892259|
 
 ## Features
 - Supports HTTP 1.0
