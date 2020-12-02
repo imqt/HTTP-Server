@@ -13,14 +13,17 @@
 #include <pthread.h>
 
 #define BACKLOG 5
-#define DEALERS 10
+#define DEALERS 11
 #define CONF "edit-config.txt"
 #define SERVER_NAME "Team-7"
 #define DEFAULT_ROOT "../../rsc/"
 #define DEFAULT_404 "../../rsc/404.html"
-#define DEFAULT_PORT 6969 
+#define DEFAULT_INDEX "../../rsc/index.html"
+#define DEFAULT_PORT 49517
 
 uint16_t port_number;
+
+int thread = 0;
 
 void set_variables();
 
@@ -28,9 +31,27 @@ void *t_dealer(void *vargp);
 
 void p_dealer(int sfd);
 
+void threadz(int sfd);
+
+void processez(int sfd);
+
 int main(int argc, const char * argv[])
 {
   
+    fprintf(stderr, "========= SERVER NAME: %s =========\n", SERVER_NAME);
+    fprintf(stderr, "== Port number:               %d\n", DEFAULT_PORT);
+    fprintf(stderr, "== HTML Root folder:          %s\n", DEFAULT_ROOT);
+    fprintf(stderr, "== 404 page:                  %s\n", DEFAULT_404);
+    fprintf(stderr, "== Home page:                 %s\n", DEFAULT_INDEX);
+    fprintf(stderr, "== Processes or threads:      ");
+    if (thread)
+        fprintf(stderr, "threads.\n");
+    else
+        fprintf(stderr, "processes.\n");
+    fprintf(stderr, "== Max concurrent clients:    %d\n", DEALERS);
+
+    fprintf(stderr, "========= :SERVER STARTING: =========\n");
+
 	// Need to read config stuff here
 	// Initial server setup from config    
 
@@ -51,36 +72,27 @@ int main(int argc, const char * argv[])
     {
     perror("setsockopt(SO_REUSEADDR)");
     }
-    // pthread_t thread_id;
 
-    // for (int i = 0; i < DEALERS; i++) {
-    //     pthread_create(&thread_id, NULL, t_dealer, (void *) &sfd);
-    //     // dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
-    // }
-    // pthread_join(thread_id, NULL); // wait for the last thread to end
-
-    pid_t child_pid, wpid;
-    int ret, status;
-    for (int i = 0; i < 5; i++) {
-        child_pid = fork();
-        if(child_pid == -1) { 
-            perror("fork");
-            exit(EXIT_FAILURE);
-        } else if(child_pid == 0) { //Child
-            p_dealer(sfd);
-            break;
-        }   
+    fprintf(stderr, "Server running with: ");
+    if (thread) {
+        fprintf(stderr, "%d threads\n", DEALERS);
+        threadz(sfd);
+    } else {
+        fprintf(stderr, "%d processes\n", DEALERS);
+        processez(sfd);
     }
-    do {
-        wpid = waitpid(child_pid, &status, WUNTRACED);
-        if (wpid == -1) {
-            perror("waitpid");
-            exit(EXIT_FAILURE);
-        }
-        fprintf(stderr, "child exited, status=%d\n", WEXITSTATUS(status));
-    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
     dc_close(sfd);
     return EXIT_SUCCESS;
+}
+
+void threadz(int sfd) {
+    pthread_t thread_id;
+    for (int i = 0; i < DEALERS; i++) {
+        pthread_create(&thread_id, NULL, t_dealer, (void *) &sfd);
+        // dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
+    }
+    pthread_join(thread_id, NULL); // wait for the last thread to end
 }
 
 void *t_dealer(void *vargp) {
@@ -105,6 +117,29 @@ void *t_dealer(void *vargp) {
     }
 }
 
+void processez(int sfd) {
+    pid_t child_pid, wpid;
+    int ret, status;
+    for (int i = 0; i < 5; i++) {
+        child_pid = fork();
+        if(child_pid == -1) { 
+            perror("fork");
+            exit(EXIT_FAILURE);
+        } else if(child_pid == 0) { //Child
+            p_dealer(sfd);
+            break;
+        }   
+    }
+    do {
+        wpid = waitpid(child_pid, &status, WUNTRACED);
+        if (wpid == -1) {
+            perror("waitpid");
+            exit(EXIT_FAILURE);
+        }
+        fprintf(stderr, "child exited, status=%d\n", WEXITSTATUS(status));
+    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+}
+
 void p_dealer(int sfd) {
     for(;;)
     {
@@ -124,4 +159,4 @@ void p_dealer(int sfd) {
         }
         dc_close(cfd);
     }
-}
+} 
