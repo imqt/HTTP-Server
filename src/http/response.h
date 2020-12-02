@@ -35,12 +35,12 @@ void get_reason(char dest[], int status_code);
 
 void respond(int cfd, char * file_name, int content_type_code, int request_code);
 
-void construct_head(char response[], char *content_length, int status_code, int content_type_code);
+void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]);
 
 // response[]          a place to put the response constructed
 // *content            content to be sent for GET
 // status_code 		   200 or some.. defined in response.c
 // content_type_code   defined in shared.h
-void construct_response(char response[], char *content_length, int status_code, int content_type_code);
+void construct_response(char response[], char *content_length, int status_code, int content_type_code, char file_name[]);
 
 #endif //DC_RESPONSE_H
