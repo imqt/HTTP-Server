@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
                     "Accept-Encoding: gzip, deflate\n"
                     "Connection: keep-alive\n"
                     "Upgrade-Insecure-Requests: 1";
-    size_t request_len = strlen(request);
+    request_len = strlen(request);
     dc_write(sfd, request, request_len);
 
     //strncpy(tmp, buf, 3); if (strcmp(tmp, end_code) == 0) {break;}
