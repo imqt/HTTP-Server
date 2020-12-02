@@ -31,6 +31,6 @@ Created by:
 
 ## Usage
 ### `./server`
-This command runs the server
+This command runs the server.
 ### `./edit-config`
 This opens `edit-config.txt` for editing.
