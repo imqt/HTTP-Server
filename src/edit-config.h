@@ -1,3 +1,5 @@
+// Adapted from mazarf/editor on Github.
+
 #ifndef TEXT_H
 #define TEXT_H
 
