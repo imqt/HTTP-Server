@@ -38,4 +38,5 @@ add_executable(edit-config edit-config.c edit-config.h ncurses/page.c ncurses/pa
 target_link_libraries(edit-config ${CURSES_LIBRARIES} -lncurses)
 target_compile_options(edit-config PRIVATE -Wpedantic -Wall -Wextra)
 
-add_executable(process process-server.c server/process_pool.c server/process_pool.h)
+#add_executable(process process-server.c server/process_pool.c server/process_pool.h)
+#target_link_libraries(process dc -lm)
