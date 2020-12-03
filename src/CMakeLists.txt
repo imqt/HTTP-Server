@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.10.2)
-project(dc C)
+#PROJECT SETTINGS
+cmake_minimum_required(VERSION 3.16.3)
+project(http_server C)
 
 set(CMAKE_C_STANDARD 11)
+
+#LOCAL LIBRARIES
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
@@ -22,19 +25,29 @@ install(TARGETS dc DESTINATION lib)
 install(FILES dc_lib/dlfcn.h dc_lib/error.h dc_lib/fcntl.h dc_lib/netdb.h dc_lib/stdio.h dc_lib/stdlib.h dc_lib/unistd.h DESTINATION include/dc)
 install(FILES dc_lib/sys/mman.h dc_lib/sys/socket.h dc_lib/sys/stat.h DESTINATION include/dc/sys)
 
-add_executable(server server.c server/thread_pool.c server/thread_pool.h server/threads.h http/response.c http/response.h  http/request.c http/request.h http/message.c http/message.h)
-target_link_libraries(server dc -lm pthread)
+#SERVER LIBRARIES
+add_library(pool server/pool.h server/pool.c)
+target_compile_options(pool PRIVATE -Wpedantic -Wall -Wextra)
+
+add_library(http http/request.h http/request.c http/response.h http/response.c)
+target_compile_options(http PRIVATE -Wpedantic -Wall -Wextra)
+
+add_library(config config/config.h config/config.c)
+target_compile_options(config PRIVATE -Wpedantic -Wall -Wextra)
+
+#EXECUTABLES
+add_executable(server server.c)
+target_link_libraries(server dc pool http config)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
-add_executable(client client.c http/request.c http/request.h http/response.c http/response.h http/message.c http/message.h)
-target_link_libraries(client dc -lm)
+add_executable(client client.c)
+target_link_libraries(client dc pool http config)
 target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
 
+#NCURSES
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
 add_executable(edit-config edit-config.c edit-config.h ncurses/page.c ncurses/page.h ncurses/line.c ncurses/line.h)
 target_link_libraries(edit-config ${CURSES_LIBRARIES} -lncurses)
 target_compile_options(edit-config PRIVATE -Wpedantic -Wall -Wextra)
-
-#add_executable(process process-server.c server/process_pool.c server/process_pool.h)

@@ -27,6 +27,6 @@ struct Config_S{
 typedef struct Config_S* Config;
 
 Config get_config(char * filepath);
-void parse_option()
+void parse_option();
 void delete_config(Config this);
 #endif //DC_CONFIG_H
