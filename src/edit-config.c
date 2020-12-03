@@ -225,7 +225,6 @@ void save_file(PAGE *p) {
 		}
 		fputc('\n', fp);
 	}
-
 	fclose(fp);
 } // save_file
 

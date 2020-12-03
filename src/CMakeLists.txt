@@ -23,7 +23,6 @@ install(FILES dc_lib/dlfcn.h dc_lib/error.h dc_lib/fcntl.h dc_lib/netdb.h dc_lib
 install(FILES dc_lib/sys/mman.h dc_lib/sys/socket.h dc_lib/sys/stat.h DESTINATION include/dc/sys)
 
 add_executable(server server.c server/thread_pool.c server/thread_pool.h server/threads.h http/response.c http/response.h  http/request.c http/request.h http/message.c http/message.h)
-#server/process_pool.c server/process_pool.h
 target_link_libraries(server dc -lm pthread)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
