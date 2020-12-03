@@ -27,6 +27,7 @@ install(FILES dc_lib/sys/mman.h dc_lib/sys/socket.h dc_lib/sys/stat.h DESTINATIO
 
 #SERVER LIBRARIES
 add_library(pool server/pool.h server/pool.c)
+target_link_libraries(pool dc pthread http)
 target_compile_options(pool PRIVATE -Wpedantic -Wall -Wextra)
 
 add_library(http http/request.h http/request.c http/response.h http/response.c)
@@ -37,7 +38,7 @@ target_compile_options(config PRIVATE -Wpedantic -Wall -Wextra)
 
 #EXECUTABLES
 add_executable(server server.c)
-target_link_libraries(server dc pool http config)
+target_link_libraries(server dc pool config)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
 add_executable(client client.c)

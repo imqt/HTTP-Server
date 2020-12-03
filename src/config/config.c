@@ -4,11 +4,11 @@
 Config get_config(char * filepath){
     Config this = (Config) calloc(1, sizeof(struct Config_S));
 
-    this->server_name
-    this->path_404 = "/";
-    this->root = "/";
-    this->port = 80;
-    this->concurr_opt = CONCURR_OPT_PROCESS;
+//    this->server_name
+//    this->path_404 = "/";
+//    this->root = "/";
+//    this->port = 80;
+//    this->concurr_opt = CONCURR_OPT_PROCESS;
     return this;
 }
 
