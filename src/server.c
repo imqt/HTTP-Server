@@ -20,7 +20,7 @@
 #define DEFAULT_ROOT "../../rsc/"
 #define DEFAULT_404 "../../rsc/404.html"
 #define DEFAULT_INDEX "../../rsc/index.html"
-#define DEFAULT_PORT 49517
+// #define DEFAULT_PORT 49512
 
 uint16_t port_number;
 
@@ -28,7 +28,7 @@ int thread = 0;
 
 void set_variables();
 
-void *t_dealer(void *vargp);
+void *dealer(void *vargp);
 
 void p_dealer(int sfd);
 
@@ -88,21 +88,28 @@ int main(int argc, const char * argv[])
 }
 
 void threadz(int sfd) {
+    int dealer_args[2];
+    dealer_args[0] = sfd;
     pthread_t thread_id;
     for (int i = 0; i < DEALERS; i++) {
-        pthread_create(&thread_id, NULL, t_dealer, (void *) &sfd);
+        dealer_args[1] = i;
+        pthread_create(&thread_id, NULL, dealer, (void *) dealer_args);
         // dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
     }
     pthread_join(thread_id, NULL); // wait for the last thread to end
 }
 
-void *t_dealer(void *vargp) {
-    int *sfd = (int *) vargp;
+void *dealer(void *vargp) {
+    int *dargs[2];
+    *dargs = (int *)vargp;
     for(;;)
     {
         // Check if server is running with processes
         // If yes, break.
-        int cfd = dc_accept(*sfd, NULL, NULL);
+        int cfd = dc_accept(*dargs[0], NULL, NULL);
+        fprintf(stderr, (thread) ? "Thread " : "Process ");
+        fprintf(stderr, "%d", dargs[1]);
+        fprintf(stderr, " is dealing with client fd %d\n", cfd);
         char client_request[BUF_SIZE]; 
         ssize_t request_len; 
         while((request_len = dc_read(cfd, client_request, BUF_SIZE)) > 0)
@@ -127,7 +134,7 @@ void processez(int sfd) {
             perror("fork");
             exit(EXIT_FAILURE);
         } else if(child_pid == 0) { //Child
-            p_dealer(sfd);
+            dealer(&sfd);
             break;
         }   
     }
@@ -140,24 +147,3 @@ void processez(int sfd) {
         fprintf(stderr, "child exited, status=%d\n", WEXITSTATUS(status));
     } while (!WIFEXITED(status) && !WIFSIGNALED(status));
 }
-
-void p_dealer(int sfd) {
-    for(;;)
-    {
-        // Check if server is running with processes
-        // If yes, break.
-        int cfd = dc_accept(sfd, NULL, NULL);
-        char client_request[BUF_SIZE]; 
-        ssize_t request_len; 
-        while((request_len = dc_read(cfd, client_request, BUF_SIZE)) > 0)
-        {
-            char file_name[BUF_SIZE] = "../../rsc/";
-            int content_type_code = 0;
-            int request_code = parse_request(client_request, file_name, &content_type_code, request_len);
-            if (request_code) {
-                respond(cfd, file_name, content_type_code, request_code);
-            }
-        }
-        dc_close(cfd);
-    }
-} 
