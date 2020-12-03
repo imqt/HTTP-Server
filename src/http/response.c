@@ -49,6 +49,18 @@ void construct_head(char response[], char *content_length, int status_code, int 
     strcat(response, httpver);
     strcat(response, status_reason);
     strcat(response, content_type);
+    // switch(content_type_code) {
+    //     case 0:
+    //         strcat(response, textHTML); break;
+    //     case 1: 
+    //         strcat(response, imgWEBP); break;
+    //     case 2:
+    //         strcat(response, audioMPEG); break;
+    //     case 3:
+    //         strcat(response, favicon); break;
+    //     default:
+    //         strcat(response, textPlain); break;
+    // }
     char ctt[BUF_SIZE];
     get_content_type(file_name, ctt);
     strcat(response, ctt);
@@ -97,7 +109,7 @@ void get_content_type(char* file_name,char *content_type) {
     int ret, status;
 
     int  stdout_bk; //is fd for stdout backup
-    fprintf(stderr,"this is before redirection\n");
+    // Start redirection process
     stdout_bk = dup(fileno(stdout));
     int pipefd[2];
     pipe2(pipefd, 0); // O_NONBLOCK);
@@ -121,18 +133,20 @@ void get_content_type(char* file_name,char *content_type) {
                 perror("waitpid");
                 exit(EXIT_FAILURE);
             }
-            fprintf(stderr, "child exited, status=%d\n", WEXITSTATUS(status));
+            // fprintf(stderr, "child exited, status=%d\n", WEXITSTATUS(status));
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     } 
-    // dc_write(STDOUT_FILENO, "", 1);
     fflush(stdout);//flushall();
-    // write(pipefd[1], "good-bye", 9); // null-terminated string!
     close(pipefd[1]);
     dup2(stdout_bk, fileno(stdout));//restore
+    // back to no redirection
     char buf[101];
     read(pipefd[0], buf, 100); 
-    fprintf(stderr, "got this from the pipe >>>%s<<<\n", buf);
-    strncpy(content_type, buf, strlen(buf)-1);
+    char *ct, *ctnewline;
+    ctnewline = strtok(buf, "\n");
+    ct = strtok(ctnewline, " ");
+    fprintf(stderr, "Content type: %s\n", buf);
+    strncpy(content_type, ct, strlen(ct));
 }
 
 void send_content(char file_name[], int cfd) {

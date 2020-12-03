@@ -15,6 +15,6 @@ Team-7
 index.html
 ###404_FILE###
 404.html
-###CONCURRENCY###
+###Threads(1) or Processes(2)?###
 1
 yes

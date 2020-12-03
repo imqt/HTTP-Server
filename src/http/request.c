@@ -12,7 +12,7 @@ char ico[] = "ico";
 
 int parse_request(char request[], char file_name[], int*content_type_code, int request_len) {
         // Print client request to stderr
-	fprintf(stderr, "%s\n", request);
+	fprintf(stderr, "== Request:\n%s\n", request);
         // dc_write(STDOUT_FILENO, "\n", 1);
 
     // dc_write(STDOUT_FILENO, request, request_len);  
@@ -26,9 +26,9 @@ int parse_request(char request[], char file_name[], int*content_type_code, int r
 
 	strncat(file_name, (request+start_index), (end_index-start_index));
 
-	fprintf(stderr, "Requested file: ");
-	for (int i = start_index; i < (end_index); i++)
-		fprintf(stderr, "%c.", request[i]);
+	// fprintf(stderr, "Requested file: ");
+	// for (int i = start_index; i < (end_index); i++)
+	// 	fprintf(stderr, "%c.", request[i]);
 
 	start_index = find_last_dot_before_space(request, start_index) + 1;
 	end_index = start_index;
@@ -43,10 +43,10 @@ int parse_request(char request[], char file_name[], int*content_type_code, int r
 	else
 		*content_type_code = 0;
 
-	fprintf(stderr, "\nRequested file type: ");
-	for (int i = start_index; i < (end_index); i++)
-		fprintf(stderr, "%c.", request[i]);
-	fprintf(stderr, "\nContent-type code: %d", *content_type_code);
+	// fprintf(stderr, "\nRequested file type: ");
+	// for (int i = start_index; i < (end_index); i++)
+	// 	fprintf(stderr, "%c.", request[i]);
+	fprintf(stderr, "==\nContent-type code: %d\n", *content_type_code);
     
     // dc_write(STDOUT_FILENO, "\n///////////////////////////After parse_request\n", 50);
 	        // dc_write(STDOUT_FILENO, "\n", 1);
