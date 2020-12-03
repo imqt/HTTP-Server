@@ -1,8 +1,5 @@
-//
-// Created by wuviv on 2020-11-04.
-//
-
 #include "response.h"
+#include <stdlib.h>
 
 char textPlain[] = "text/plain";
 char textHTML[]   = "text/html";
@@ -43,16 +40,10 @@ void respond(int cfd, char * file_name, int content_type_code, int request_code)
         // dc_write(STDOUT_FILENO, "\n", 1);
 }
 
-
-void construct_response(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
-    construct_head(response, content_length, status_code, content_type_code, file_name);
-    free(content_length);
-}
-
 void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
     char httpver[] = "HTTP/1.0 ";
     char status_reason[100];
-        get_reason(status_reason, status_code);
+    get_reason(status_reason, status_code);
     char content_type[] = "\r\nContent-Type: ";
     char content_l[] = "\r\nContent-Length: ";
     strcat(response, httpver);
@@ -77,6 +68,13 @@ void construct_head(char response[], char *content_length, int status_code, int 
     strcat(response, content_length);
     strcat(response, "\r\n\r\n");
 }
+
+
+void construct_response(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
+    construct_head(response, content_length, status_code, content_type_code, file_name);
+    free(content_length);
+}
+
 
 void get_reason(char dest[], int status_code) {
     switch(status_code) {
@@ -106,7 +104,7 @@ char * get_content_length( char file_name[]) {
     return len;
 }
 
-void get_content_type(char file_name[],char *content_type) {
+void get_content_type(char* file_name,char *content_type) {
     pid_t child_pid, wpid;
     int ret, status;
 
