@@ -1,20 +1,28 @@
-###########
-EDIT-CONFIG
-###########
+   _____             __ _                       _   _
+  / ____|           / _(_)                     | | (_)
+ | |     ___  _ __ | |_ _  __ _ _   _ _ __ __ _| |_ _  ___  _ __
+ | |    / _ \| '_ \|  _| |/ _` | | | | '__/ _` | __| |/ _ \| '_ \
+ | |___| (_) | | | | | | | (_| | |_| | | | (_| | |_| | (_) | | | |
+  \_____\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|
+                           __/ |
+                          |___/
+--------------------------------------------------------------------
 To edit configuration, replace the values underneath each section.
 
-###SERVER_NAME###
+#SERVER_NAME#
 Team-7
-###PORT###
+#PORT#
 49158
-###ROOT_FOLDER###
+#ROOT_FOLDER#
 ./rsc/
-###CONNECTIONS###
+#CONNECTIONS#
 10
-###HOME_PAGE###
+#HOME_PAGE#
 index.html
-###404_FILE###
+#404_FILE#
 404.html
-###Threads(1) or Processes(2)?###
-1
+#CONCURRENCY#
+threads
+#BACKLOG#
+5
 yes

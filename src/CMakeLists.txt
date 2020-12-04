@@ -45,6 +45,10 @@ add_executable(client client.c)
 target_link_libraries(client dc pool http config)
 target_compile_options(client PRIVATE -Wpedantic -Wall -Wextra)
 
+add_executable(config-test config-test.c)
+target_link_libraries(config-test dc pool http config)
+target_compile_options(config-test PRIVATE -Wpedantic -Wall -Wextra)
+
 #NCURSES
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
