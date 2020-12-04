@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include "../shared.h"
 #include "../dc_lib/unistd.h"
-#include "message.h"
+#include "../util/message.h"
 #define BUF_SIZE 4096
 
 

@@ -1,8 +1,8 @@
-#include "dc_lib/sys/socket.h"
-#include "dc_lib/unistd.h"
-#include "http/request.h"
-#include "http/response.h"
-#include "shared.h"
+#include "../dc_lib/sys/socket.h"
+#include "../dc_lib/unistd.h"
+#include "../http/request.h"
+#include "../http/response.h"
+#include "../shared.h"
 
 #include <netinet/in.h>
 #include <stdio.h>
@@ -113,14 +113,6 @@ int main(int argc, const char * argv[])
         }
     }
 
-//    pthread_t thread_id;
-//
-//    for (int i = 0; i < DEALERS; i++) {
-//        pthread_create(&thread_id, NULL, dealer, (void *) &sfd);
-//    }
-//    pthread_join(thread_id, NULL); // wait for the last thread to end
-//
-//    dc_close(sfd);
 
     return EXIT_SUCCESS;
 }
