@@ -47,7 +47,7 @@ void config_set_file(Config c){
     char buf[BUFF_SIZE];
     dc_read(config_in, buf, BUFF_SIZE);
 
-    const char s[2] = "#";
+    const char s[2] = "~";
     char *option;
     strtok(buf, s);
     option = strtok(NULL, s);//get rid of title
