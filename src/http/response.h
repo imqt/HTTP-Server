@@ -25,15 +25,14 @@
 #define BUF_SIZE 4096
 
 
-void respond(int cfd, char * file_name, int content_type_code, int request_code);
+void respond(int cfd, char * file_name, int request_code);
 
-void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]);
+void construct_head(char response[], size_t content_length, int status_code, char file_name[]);
 
 // response[]          a place to put the response constructed
 // *content            content to be sent for GET
 // status_code 		   200 or some.. defined in response.c
-// content_type_code   defined in shared.h
-void construct_response(char response[], char *content_length, int status_code, int content_type_code, char file_name[]);
+void construct_response(char response[], size_t content_length, int status_code, char file_name[]);
 
 // Give the appropriate hardcoded status reponse.
 // Helper for construct_response
@@ -41,7 +40,7 @@ void construct_response(char response[], char *content_length, int status_code, 
 // param: status_code: http reponse status code (200, 400, 404,...)
 void get_reason(char dest[], int status_code);
 
-char * get_content_length(char file_name[]);
+size_t get_content_length(char file_name[]);
 
 void get_content_type(char* file_name,char *content_type);
 

@@ -10,8 +10,6 @@
 
 int get_method(char request[]);
 
-int find_last_dot_before_space(char request[], int start_index);
-
-int parse_request(char request[], char file_name[], int* content_type_code, int request_len);
+int parse_request(char request[], char file_name[], int request_len);
 
 #endif //DC_REQUEST_H
