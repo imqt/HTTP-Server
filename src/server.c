@@ -45,5 +45,8 @@ int main(int argc, const char * argv[])
     }
 
     dc_close(sfd);
+    sem_close(&config_mutex);
+    munmap(config, sizeof(struct Config_S));
+
     return EXIT_SUCCESS;
 }
