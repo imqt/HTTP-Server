@@ -12,11 +12,11 @@ To edit configuration, replace the values underneath each section.
 ###SERVER_NAME####
 Team-7
 ####PORT####
-49158
+49159
 ####ROOT_FOLDER####
 ./rsc/
 ####CONNECTIONS####
-10
+11
 ####HOME_PAGE####
 index.html
 ####404_FILE####
@@ -26,3 +26,6 @@ threads
 ####BACKLOG####
 5
 yes
+
+
+
