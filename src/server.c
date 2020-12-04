@@ -9,20 +9,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <semaphore.h>
+#include <sys/mman.h>
+
+static sem_t config_mutex;
 
 int main(int argc, const char * argv[])
 {
-    Config c = config_create();
-    config_print(c);
+    Config config = mmap(NULL, sizeof(struct Config_S), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+    memcpy(config, config_create(), sizeof(struct Config_S));
+    config_print(config);
 
     int sfd = dc_socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(struct sockaddr_in));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(c->port);
+    addr.sin_port = htons(config->port);
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
     dc_bind(sfd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
-    dc_listen(sfd, c->backlog);
+    dc_listen(sfd, config->backlog);
 
     int enable = 1;
 
@@ -31,12 +36,12 @@ int main(int argc, const char * argv[])
     }
 
     fprintf(stderr, "Server running with: ");
-    if (c->concurr_opt == CONCURR_OPT_THREAD) {
-        fprintf(stderr, "%d threads\n", c->connections);
-        threadz(sfd, c->connections);
+    if (config->concurr_opt == CONCURR_OPT_THREAD) {
+        fprintf(stderr, "%d threads\n", config->connections);
+        threadz(sfd, config->connections);
     } else {
-        fprintf(stderr, "%d processes\n", c->connections);
-        processez(sfd, c->connections);
+        fprintf(stderr, "%d processes\n", config->connections);
+        processez(sfd, config->connections);
     }
 
     dc_close(sfd);

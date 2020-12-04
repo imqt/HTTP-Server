@@ -1,7 +1,3 @@
-//
-// Created by wuviv on 2020-11-04.
-//
-
 #ifndef DC_CONFIG_H
 #define DC_CONFIG_H
 
@@ -9,11 +5,6 @@
 
 #define CONCURR_OPT_THREAD 0
 #define CONCURR_OPT_PROCESS 1
-
-#define IPC_OPT_SOCKET 0
-#define IPC_OPT_PIPE 1
-#define IPC_OPT_SEMAPHORE 2
-#define IPC_OPT_SHAREMEM 3
 
 struct Config_S{
     char * server_name;
