@@ -20,7 +20,7 @@
 
 uint16_t port_number;
 
-int thread = 0;
+int thread = 1;
 
 void set_variables();
 

@@ -4,7 +4,7 @@
 
 #include "pool.h"
 
-#define THREAD 0
+#define THREAD 1
 
 void *dealer(void *vargp) {
     int *dargs[2];
@@ -13,9 +13,9 @@ void *dealer(void *vargp) {
     {
         // Check if server is running with processes
         // If yes, break.
-        int cfd = dc_accept(*dargs[0], NULL, NULL);
+        int cfd = dc_accept(*(dargs[0]), NULL, NULL);
         fprintf(stderr, (THREAD) ? "Thread " : "Process ");
-        fprintf(stderr, "%d", dargs[1]);
+        fprintf(stderr, "%d\n", *(dargs[0]+1));
         fprintf(stderr, " is dealing with client fd %d\n", cfd);
         char client_request[BUF_SIZE];
         ssize_t request_len;
@@ -33,13 +33,12 @@ void *dealer(void *vargp) {
 }
 
 void threadz(int sfd, int n) {
-    int dealer_args[2];
-    dealer_args[0] = sfd;
     pthread_t thread_id;
+    int dealer_args_arr[n][2];
     for (int i = 0; i < n; i++) {
-        dealer_args[1] = i;
-        pthread_create(&thread_id, NULL, dealer, (void *) dealer_args);
-        // dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
+        dealer_args_arr[i][0] = sfd;
+        dealer_args_arr[i][1] = i;
+        pthread_create(&thread_id, NULL, dealer, (void *) dealer_args_arr[i]);
     }
     pthread_join(thread_id, NULL); // wait for the last thread to end
 }
