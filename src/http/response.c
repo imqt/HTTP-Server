@@ -13,6 +13,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         strcat(file_index, config->path_home);
         construct_response(response, get_content_length(file_index), 200, file_index);
         dc_write(cfd, response, strlen(response));
+        fprintf(stderr, "== Reply file name: =========== %s\n", file_name);
         if (request_code == 5) { send_content(file_index, cfd); }
     } 
     else if ((rp = realpath(file_name, NULL))!= NULL) {
@@ -20,6 +21,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         construct_response(response, get_content_length(file_name), 200, file_name);
         // Send response to client
         dc_write(cfd, response, strlen(response));
+        fprintf(stderr, "== Reply file name: =========== %s\n", file_name);
         // Print to server's terminal
         if (request_code == 5) { send_content(file_name, cfd); }
         free(rp);
@@ -30,6 +32,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         construct_response(response, get_content_length(file_404), 404, file_404);
         // Send response to client
         dc_write(cfd, response, strlen(response));
+        fprintf(stderr, "== Reply file name: =========== %s\n", file_404);
         // Print to server's terminal
         if (request_code == 5) { send_content(file_404, cfd); }
         free(rp);
