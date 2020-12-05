@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
+#include <sys/mman.h>
 #include "config.h"
 #include "../dc_lib/unistd.h"
 
@@ -17,14 +19,14 @@
 #define BUFF_SIZE 100000
 
 Config config_create(){
-    Config this = (Config) calloc(1, sizeof(struct Config_S));
+    Config this = mmap(NULL, sizeof(struct Config_S), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
     config_set_default(this);
     config_set_file(this);
     return this;
 }
 
 void config_delete(Config this){
-    free(this);
+    munmap(this, sizeof(struct Config_S));
 }
 
 void config_set_default(Config c){
@@ -72,7 +74,13 @@ void config_set_file(Config c){
         }else if(strcmp(option, "404_FILE")==0){
             c->path_404 = value;
         }else if(strcmp(option, "CONCURRENCY")==0) {
-            c->concurr_opt = strcmp(value, "THREADS") ? CONCURR_OPT_THREAD : CONCURR_OPT_PROCESS;
+            if(strcmp(value, "THREADS")==0)
+                c->concurr_opt = CONCURR_OPT_THREAD;
+            else if(strcmp(value, "PROCESSESS")==0)
+                c->concurr_opt = CONCURR_OPT_PROCESS;
+            else{
+                fprintf(stderr, "Configuration Error: %s is not a valid concurrency option.", value);
+            }
         }else if(strcmp(option, "BACKLOG")==0){
                 c->backlog = atoi(value);
         }else{

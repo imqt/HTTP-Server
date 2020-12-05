@@ -2,56 +2,65 @@
 // Created by wuviv on 2020-12-03.
 //
 
+#include <semaphore.h>
 #include "pool.h"
 
-#define THREAD 1
-
 void *dealer(void *vargp) {
-    int *dargs[2];
-    *dargs = (int *)vargp;
-    for(;;)
-    {
+    int sfd = ((int*)vargp)[0];
+    int id = ((int*)vargp)[1];
+    Config config = ((Config*)vargp)[2];
+    sem_t* config_mutex = ((sem_t**)vargp)[3];
+
+    for(;;){
         // Check if server is running with processes
         // If yes, break.
-        int cfd = dc_accept(*(dargs[0]), NULL, NULL);
-        fprintf(stderr, (THREAD) ? "Thread " : "Process ");
-        fprintf(stderr, "%d\n", *(dargs[0]+1));
-        fprintf(stderr, " is dealing with client fd %d\n", cfd);
+        int cfd = dc_accept(sfd, NULL, NULL);
+        sem_wait(config_mutex);
+        fprintf(stderr, "%s %d is dealing with client fd %d\n",(config->concurr_opt == CONCURR_OPT_THREAD) ? "Thread" : "Process", id+1, cfd);
+
         char client_request[BUF_SIZE];
         ssize_t request_len;
         while((request_len = dc_read(cfd, client_request, BUF_SIZE)) > 0)
         {
-            char file_name[BUF_SIZE] = "../../rsc/";
+            char file_name[BUF_SIZE];
+            strcat(file_name, config->root);
+            int content_type_code = 0;
             int request_code = parse_request(client_request, file_name, request_len);
             if (request_code) {
                 respond(cfd, file_name, request_code);
             }
         }
+        sem_post(config_mutex);
         dc_close(cfd);
     }
 }
 
-void threadz(int sfd, int n) {
+void threadz(int sfd, Config config, sem_t* config_mutex) {
     pthread_t thread_id;
-    int dealer_args_arr[n][2];
-    for (int i = 0; i < n; i++) {
+    int dealer_args_arr[config->connections][2];
+    for (int i = 0; i < config->connections; i++) {
         dealer_args_arr[i][0] = sfd;
         dealer_args_arr[i][1] = i;
-        pthread_create(&thread_id, NULL, dealer, (void *) dealer_args_arr[i]);
+        void * args_arr[4] = {dealer_args_arr[i][0], dealer_args_arr[i][1], config, config_mutex};
+        pthread_create(&thread_id, NULL, dealer, args_arr);
     }
     pthread_join(thread_id, NULL); // wait for the last thread to end
 }
 
-void processez(int sfd, int n) {
+void processez(int sfd, Config config, sem_t* config_mutex) {
     pid_t child_pid, wpid;
     int ret, status;
-    for (int i = 0; i < n; i++) {
+    int dealer_args_arr[config->connections][2];
+    for (int i = 0; i < config->connections; i++) {
+        dealer_args_arr[i][0] = sfd;
+        dealer_args_arr[i][1] = i;
         child_pid = fork();
         if(child_pid == -1) {
             perror("fork");
             exit(EXIT_FAILURE);
         } else if(child_pid == 0) { //Child
-            dealer(&sfd);
+            void * args_arr[4] = {dealer_args_arr[i][0], dealer_args_arr[i][1], config, config_mutex};
+            dealer(args_arr);
             break;
         }
     }

@@ -16,9 +16,13 @@ static sem_t config_mutex;
 
 int main(int argc, const char * argv[])
 {
-    Config config = mmap(NULL, sizeof(struct Config_S), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
-    memcpy(config, config_create(), sizeof(struct Config_S));
+    Config config = config_create();
     config_print(config);
+
+    if(sem_init(&config_mutex, 0, 1)==-1){
+        perror("semaphore");
+        exit(EXIT_FAILURE);
+    }
 
     int sfd = dc_socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in addr;
@@ -38,15 +42,14 @@ int main(int argc, const char * argv[])
     fprintf(stderr, "Server running with: ");
     if (config->concurr_opt == CONCURR_OPT_THREAD) {
         fprintf(stderr, "%d threads\n", config->connections);
-        threadz(sfd, config->connections);
+        threadz(sfd, config, &config_mutex);
     } else {
         fprintf(stderr, "%d processes\n", config->connections);
-        processez(sfd, config->connections);
+        processez(sfd, config, &config_mutex);
     }
 
     dc_close(sfd);
     sem_close(&config_mutex);
-    munmap(config, sizeof(struct Config_S));
-
+    config_delete(config);
     return EXIT_SUCCESS;
 }
