@@ -25,9 +25,9 @@ void *dealer(void *vargp) {
             char file_name[BUF_SIZE];
             strcat(file_name, config->root);
             int content_type_code = 0;
-            int request_code = parse_request(client_request, file_name, &content_type_code, request_len);
+            int request_code = parse_request(client_request, file_name, request_len);
             if (request_code) {
-                respond(cfd, file_name, content_type_code, request_code);
+                respond(cfd, file_name, request_code);
             }
         }
         sem_post(config_mutex);
