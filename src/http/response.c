@@ -10,7 +10,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
     if (strlen(file_name) <= 11) {
         char file_index[BUF_SIZE];
         strcat(file_index, config->root);
-        strcat(file_index, "index.html");
+        strcat(file_index, config->path_home);
         construct_response(response, get_content_length(file_index), 200, file_index);
         dc_write(cfd, response, strlen(response));
         if (request_code == 5) { send_content(file_index, cfd); }
@@ -26,7 +26,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
     } else {
         char file_404[BUF_SIZE];
         strcat(file_404, config->root);
-        strcat(file_404, "404.html");
+        strcat(file_404, config->path_404);
         construct_response(response, get_content_length(file_404), 404, file_404);
         // Send response to client
         dc_write(cfd, response, strlen(response));

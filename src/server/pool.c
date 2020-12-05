@@ -20,17 +20,8 @@ void *dealer(void *vargp) {
             char file_name[BUF_SIZE];
             strcat(file_name, config->root);
             sem_post(config_mutex);
-
-            fprintf(stderr, "YOOOOOOOOOOOOOO ");
-            for (int i = 0; file_name[i] != '\0'; i++)
-                fprintf(stderr, "%c", file_name[i]);
-
             int request_code = parse_request(client_request, file_name, request_len);
             if (request_code) {
-
-                for (int i = 0; file_name[i] != '\0'; i++)
-                    fprintf(stderr, "%c", file_name[i]);
-
                 respond(cfd, file_name, request_code, config, config_mutex);
             }
         }
