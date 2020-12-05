@@ -22,6 +22,8 @@ Created by:
 - html root                        2.5%
 - 404 	                           2.5%
 
+Server makes use of the file command to get content type of the requested file and sends the file in uint8_t.
+
 ## Bonus Features:
 - ***Home page*, *404 page*, and *root directory*** can be changed while the server is running
   by entering HOME_PAGE/404_PAGE/ROOT_FOLDER:new_value and hitting enter.
