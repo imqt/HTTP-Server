@@ -10,7 +10,7 @@ char imgWEBP[]     = "image/webp";
 char audioMPEG[]  = "audio/mpeg";
 char favicon[]  = "image/webp";
 
-void respond(int cfd, char * file_name, int content_type_code, int request_code, Config config, sem_t* config_mutex) {
+void respond(int cfd, char * file_name, int request_code, Config config, sem_t* config_mutex) {
     sem_wait(config_mutex);
     char response[BUF_SIZE] = "";
     char * rp;
