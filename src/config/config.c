@@ -3,7 +3,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include <ctype.h>
 #include <sys/mman.h>
 #include <semaphore.h>
 #include "config.h"
@@ -98,6 +97,7 @@ void config_print(const Config c){
     fprintf(stderr, "== Concurrency:               %d %s\n", c->connections, (c->concurr_opt)?"threads":"processes");
     fprintf(stderr, "== Backlog:                   %d\n", c->backlog);
     fprintf(stderr, "========= :SERVER STARTING: =========\n");
+    fprintf(stderr, "Change 404_PAGE, HOME_PAGE, or ROOT with format option:value\n");
 }
 
 void *config_handler(void *vargp){
@@ -121,16 +121,8 @@ void *config_handler(void *vargp){
                 config->path_home = value;
             }else if(strcmp(option, "404_FILE")==0){
                 config->path_404 = value;
-            }else if(strcmp(option, "CONCURRENCY")==0) {
-                if(strcmp(value, "THREADS")==0)
-                    config->concurr_opt = CONCURR_OPT_THREAD;
-                else if(strcmp(value, "PROCESSES")==0)
-                    config->concurr_opt = CONCURR_OPT_PROCESS;
-                else{
-                    fprintf(stderr, "Configuration Error: %s is not a valid concurrency option.", value);
-                }
             }else{
-                fprintf(stderr, "Configuration Error: %s is not a option.", option);
+                fprintf(stderr, "Configuration Error: %s is not a changeable option.", option);
             }
             config_print(config);
             sem_post(config_mutex);
