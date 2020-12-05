@@ -5,19 +5,18 @@
 #include "../dc_lib/unistd.h"
 #include "../http/response.h"
 #include "../http/request.h"
+#include "../config/config.h"
 
 #include <sys/wait.h>
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <semaphore.h>
 
-#define BACKLOG 5
-#define DEALERS 11
+void threadz(int sfd, Config config, sem_t* config_mutex);
 
-void threadz(int sfd, int n);
-
-void processez(int sfd, int n);
+void processez(int sfd, Config config, sem_t* config_mutex);
 
 void *dealer(void *vargp);
 
