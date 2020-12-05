@@ -15,6 +15,7 @@ struct Config_S{
     char * path_404;
     int concurr_opt; //0: threads 1: processes
     int backlog;
+    int exit;
 };
 typedef struct Config_S* Config;
 
@@ -24,4 +25,5 @@ void config_set_default(Config c);
 void config_set_file(Config c);
 void config_print(const Config c);
 
+void *config_handler(void *vargp);
 #endif //DC_CONFIG_H

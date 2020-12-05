@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <semaphore.h>
 #include <sys/mman.h>
+#include <pthread.h>
 
 static sem_t config_mutex;
 
@@ -40,6 +41,11 @@ int main(int argc, const char * argv[])
     }
 
     fprintf(stderr, "Server running with: ");
+
+    pthread_t config_thread_id;
+    void * args_arr[2] = {config, &config_mutex};
+    pthread_create(&config_thread_id, NULL, config_handler, args_arr);
+
     if (config->concurr_opt == CONCURR_OPT_THREAD) {
         fprintf(stderr, "%d threads\n", config->connections);
         threadz(sfd, config, &config_mutex);
@@ -48,6 +54,7 @@ int main(int argc, const char * argv[])
         processez(sfd, config, &config_mutex);
     }
 
+    pthread_join(config_thread_id, NULL);
     dc_close(sfd);
     sem_close(&config_mutex);
     config_delete(config);
