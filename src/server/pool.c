@@ -27,7 +27,7 @@ void *dealer(void *vargp) {
             int content_type_code = 0;
             int request_code = parse_request(client_request, file_name, request_len);
             if (request_code) {
-                respond(cfd, file_name, request_code);
+                respond(cfd, file_name, request_code, config, config_mutex);
             }
         }
         sem_post(config_mutex);

@@ -1,7 +1,3 @@
-//
-// Created by wuviv on 2020-11-04.
-//
-
 #ifndef DC_RESPONSE_H
 #define DC_RESPONSE_H
 
@@ -28,7 +24,7 @@
 #define BUF_SIZE 4096
 
 
-void respond(int cfd, char * file_name, int content_type_code, int request_code, Config config, sem_t* config_mutex);
+void respond(int cfd, char * file_name, int request_code, Config config, sem_t* config_mutex);
 
 void construct_head(char response[], size_t content_length, int status_code, char file_name[]);
 
