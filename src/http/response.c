@@ -8,9 +8,12 @@ void respond(int cfd, char * file_name, int request_code) {
     char response[BUF_SIZE] = "";
     char * rp;
     if (strlen(file_name) <= 11) {
-        construct_response(response, get_content_length("../../rsc/index.html"), 200, "../../rsc/index.html");
+        char file_index[BUF_SIZE];
+        strcat(file_index, file_name);
+        strcat(file_index, "index.html");
+        construct_response(response, get_content_length(file_index), 200, file_index);
         dc_write(cfd, response, strlen(response));
-        if (request_code == 5) { send_content("../../rsc/index.html", cfd); }
+        if (request_code == 5) { send_content(file_index, cfd); }
     } 
     else if ((rp = realpath(file_name, NULL))!= NULL) {
         // Constuct a reponse when FILE EXISTS:
@@ -21,7 +24,9 @@ void respond(int cfd, char * file_name, int request_code) {
         if (request_code == 5) { send_content(file_name, cfd); }
         free(rp);
     } else {
-        // TODO: differentiate between handling html not found and videos/images not found
+        // char file_404[BUF_SIZE];
+        // strcat(file_404, file_name);
+        // strcat(file_404, "404.html");
         construct_response(response, get_content_length("../../rsc/404.html"), 404, "../../rsc/404.html");
         // Send response to client
         dc_write(cfd, response, strlen(response));
