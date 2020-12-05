@@ -1,10 +1,17 @@
-//
-// Created by wuviv on 2020-11-04.
-//
-
 #include "response.h"
+#include "../config/config.h"
+#include <stdlib.h>
+#include <semaphore.h>
 
-void respond(int cfd, char * file_name, int request_code) {
+char textPlain[] = "text/plain";
+char textHTML[]   = "text/html";
+char imgPNG[]     = "image/png";
+char imgWEBP[]     = "image/webp";
+char audioMPEG[]  = "audio/mpeg";
+char favicon[]  = "image/webp";
+
+void respond(int cfd, char * file_name, int content_type_code, int request_code, Config config, sem_t* config_mutex) {
+    sem_wait(config_mutex);
     char response[BUF_SIZE] = "";
     char * rp;
     if (strlen(file_name) <= 11) {
@@ -29,7 +36,7 @@ void respond(int cfd, char * file_name, int request_code) {
         if (request_code == 5) { send_content("../../rsc/404.html", cfd); }
         free(rp);
     }
-
+    sem_post(config_mutex);
 }
 
 
