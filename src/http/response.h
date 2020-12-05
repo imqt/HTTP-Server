@@ -19,13 +19,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <semaphore.h>
 #include "../shared.h"
 #include "../dc_lib/unistd.h"
 #include "../util/message.h"
+#include "../config/config.h"
+
 #define BUF_SIZE 4096
 
 
-void respond(int cfd, char * file_name, int content_type_code, int request_code);
+void respond(int cfd, char * file_name, int content_type_code, int request_code, Config config, sem_t* config_mutex);
 
 void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]);
 

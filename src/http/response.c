@@ -1,5 +1,7 @@
 #include "response.h"
+#include "../config/config.h"
 #include <stdlib.h>
+#include <semaphore.h>
 
 char textPlain[] = "text/plain";
 char textHTML[]   = "text/html";
@@ -8,10 +10,11 @@ char imgWEBP[]     = "image/webp";
 char audioMPEG[]  = "audio/mpeg";
 char favicon[]  = "image/webp";
 
-void respond(int cfd, char * file_name, int content_type_code, int request_code) {
-            // dc_write(STDOUT_FILENO, "\n", 1);
-
+void respond(int cfd, char * file_name, int content_type_code, int request_code, Config config, sem_t* config_mutex) {
+    sem_wait(config_mutex);
     char response[BUF_SIZE] = "";
+    char* path_index = strcat(config->root, config->path_home);
+    char* path_404 = strcat(config->root, config->path_404);
     if (strlen(file_name) <= 11) {
         construct_response(response, get_content_length("../../rsc/index.html"), 200, content_type_code, "../../rsc/index.html");
         dc_write(cfd, response, strlen(response));
@@ -38,6 +41,7 @@ void respond(int cfd, char * file_name, int content_type_code, int request_code)
     }
     // dc_write(STDOUT_FILENO, "\n//////////////////////////////After responding\n", 50);
         // dc_write(STDOUT_FILENO, "\n", 1);
+    sem_post(config_mutex);
 }
 
 void construct_head(char response[], char *content_length, int status_code, int content_type_code, char file_name[]) {
