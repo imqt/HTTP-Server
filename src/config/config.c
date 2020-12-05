@@ -5,6 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/mman.h>
+#include <semaphore.h>
 #include "config.h"
 #include "../dc_lib/unistd.h"
 
@@ -54,12 +55,9 @@ void config_set_file(Config c){
     strtok(buf, s);
     option = strtok(NULL, s);//get rid of title
     while(option != NULL){
-//        printf("Option: %s\n", option);
-
         char* value = strtok(NULL, s);
         value++;
         value[strlen(value)-1]='\0';
-//        printf("Value: %s\n", value);
 
         if(strcmp(option, "SERVER_NAME")==0){
             c->server_name = value;
@@ -79,7 +77,7 @@ void config_set_file(Config c){
             else if(strcmp(value, "PROCESSESS")==0)
                 c->concurr_opt = CONCURR_OPT_PROCESS;
             else{
-                fprintf(stderr, "Configuration Error: %s is not a valid concurrency option.", value);
+                fprintf(stderr, "Configuration Error: %s is not a valid concurrency option.\n", value);
             }
         }else if(strcmp(option, "BACKLOG")==0){
                 c->backlog = atoi(value);
@@ -100,4 +98,42 @@ void config_print(const Config c){
     fprintf(stderr, "== Concurrency:               %d %s\n", c->connections, (c->concurr_opt)?"threads":"processes");
     fprintf(stderr, "== Backlog:                   %d\n", c->backlog);
     fprintf(stderr, "========= :SERVER STARTING: =========\n");
+}
+
+void *config_handler(void *vargp){
+    Config config = ((Config*)vargp)[0];
+    sem_t* config_mutex = ((sem_t**)vargp)[1];
+
+    for(;;){
+        char buffer[256];
+        while(read(STDIN_FILENO, buffer, 256)>0){
+            const char s[2] = ":";
+            char *option, *value;
+            option = strtok(buffer, s);
+            value = strtok(NULL, s);
+            value[strlen(value)-1]='\0';
+
+            sem_wait(config_mutex);
+            printf("option: %s, value: %s", option, value);
+            if(strcmp(option, "ROOT_FOLDER")==0){
+                config->root = value;
+            }else if(strcmp(option, "HOME_PAGE")==0){
+                config->path_home = value;
+            }else if(strcmp(option, "404_FILE")==0){
+                config->path_404 = value;
+            }else if(strcmp(option, "CONCURRENCY")==0) {
+                if(strcmp(value, "THREADS")==0)
+                    config->concurr_opt = CONCURR_OPT_THREAD;
+                else if(strcmp(value, "PROCESSES")==0)
+                    config->concurr_opt = CONCURR_OPT_PROCESS;
+                else{
+                    fprintf(stderr, "Configuration Error: %s is not a valid concurrency option.", value);
+                }
+            }else{
+                fprintf(stderr, "Configuration Error: %s is not a option.", option);
+            }
+            config_print(config);
+            sem_post(config_mutex);
+        }
+    }
 }

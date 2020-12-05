@@ -38,7 +38,7 @@ target_compile_options(config PRIVATE -Wpedantic -Wall -Wextra)
 
 #EXECUTABLES
 add_executable(server server.c)
-target_link_libraries(server dc pool config)
+target_link_libraries(server pthread dc pool config)
 target_compile_options(server PRIVATE -Wpedantic -Wall -Wextra)
 
 add_executable(client client.c)
