@@ -6,7 +6,6 @@ void *dealer(void *vargp) {
     int id = ((int*)vargp)[1];
     Config config = ((Config*)vargp)[2];
     sem_t* config_mutex = ((sem_t**)vargp)[3];
-
     for(;;){
         // Check if server is running with processes
         // If yes, break.
@@ -20,13 +19,21 @@ void *dealer(void *vargp) {
         {
             char file_name[BUF_SIZE];
             strcat(file_name, config->root);
-            int content_type_code = 0;
+            sem_post(config_mutex);
+
+            fprintf(stderr, "YOOOOOOOOOOOOOO ");
+            for (int i = 0; file_name[i] != '\0'; i++)
+                fprintf(stderr, "%c", file_name[i]);
+
             int request_code = parse_request(client_request, file_name, request_len);
             if (request_code) {
+
+                for (int i = 0; file_name[i] != '\0'; i++)
+                    fprintf(stderr, "%c", file_name[i]);
+
                 respond(cfd, file_name, request_code, config, config_mutex);
             }
         }
-        sem_post(config_mutex);
         dc_close(cfd);
     }
 }
