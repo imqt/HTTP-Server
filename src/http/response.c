@@ -3,21 +3,17 @@
 #include <stdlib.h>
 #include <semaphore.h>
 
-char textPlain[] = "text/plain";
-char textHTML[]   = "text/html";
-char imgPNG[]     = "image/png";
-char imgWEBP[]     = "image/webp";
-char audioMPEG[]  = "audio/mpeg";
-char favicon[]  = "image/webp";
-
 void respond(int cfd, char * file_name, int request_code, Config config, sem_t* config_mutex) {
     sem_wait(config_mutex);
     char response[BUF_SIZE] = "";
     char * rp;
     if (strlen(file_name) <= 11) {
-        construct_response(response, get_content_length("../../rsc/index.html"), 200, "../../rsc/index.html");
+        char file_index[BUF_SIZE];
+        strcat(file_index, config->root);
+        strcat(file_index, "index.html");
+        construct_response(response, get_content_length(file_index), 200, file_index);
         dc_write(cfd, response, strlen(response));
-        if (request_code == 5) { send_content("../../rsc/index.html", cfd); }
+        if (request_code == 5) { send_content(file_index, cfd); }
     } 
     else if ((rp = realpath(file_name, NULL))!= NULL) {
         // Constuct a reponse when FILE EXISTS:
@@ -28,12 +24,14 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         if (request_code == 5) { send_content(file_name, cfd); }
         free(rp);
     } else {
-        // TODO: differentiate between handling html not found and videos/images not found
-        construct_response(response, get_content_length("../../rsc/404.html"), 404, "../../rsc/404.html");
+        char file_404[BUF_SIZE];
+        strcat(file_404, config->root);
+        strcat(file_404, "404.html");
+        construct_response(response, get_content_length(file_404), 404, file_404);
         // Send response to client
         dc_write(cfd, response, strlen(response));
         // Print to server's terminal
-        if (request_code == 5) { send_content("../../rsc/404.html", cfd); }
+        if (request_code == 5) { send_content(file_404, cfd); }
         free(rp);
     }
     sem_post(config_mutex);
