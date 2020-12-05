@@ -17,7 +17,6 @@ int parse_request(char request[], char file_name[], int request_len) {
 	while (request[end_index++] != ' ');
 	end_index--;
 	strncat(file_name, (request+start_index), (end_index-start_index));
-	fprintf(stderr, "== Request:\nyaaaaa%d\n", request_code);
 	return request_code;
 }
 
