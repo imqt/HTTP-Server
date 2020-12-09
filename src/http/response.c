@@ -95,14 +95,15 @@ void get_content_type(char file_name[],char *content_type) {
     stdout_bk = dup(fileno(stdout));
     int pipefd[2];
     pipe2(pipefd, 0); // O_NONBLOCK);
-    // What used to be stdout will now go to the pipe.
-    dup2(pipefd[1], fileno(stdout));
+
 
     child_pid = fork();
     if(child_pid == -1) { 
         perror("fork");
         exit(EXIT_FAILURE);
     } else if(child_pid == 0) { //Child
+        // What used to be stdout will now go to the pipe.
+        dup2(pipefd[1], fileno(stdout));
         ret = execl("/bin/file", "file", "--mime-type", "-b", file_name, (char *)NULL);
         if (ret == -1) {
             perror("execl");
