@@ -37,7 +37,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         if (request_code == 5) { send_content(file_404, cfd); }
         free(rp);
     }
-    fprintf(stderr, "Done=========\n");
+    fprintf(stderr, "=====Done=========\n");
     sem_post(config_mutex);
 }
 
@@ -95,14 +95,14 @@ void get_content_type(char file_name[],char *content_type) {
     stdout_bk = dup(fileno(stdout));
     int pipefd[2];
     pipe2(pipefd, 0); // O_NONBLOCK);
-    // What used to be stdout will now go to the pipe.
-    dup2(pipefd[1], fileno(stdout));
 
     child_pid = fork();
     if(child_pid == -1) { 
         perror("fork");
         exit(EXIT_FAILURE);
     } else if(child_pid == 0) { //Child
+        // What used to be stdout will now go to the pipe.
+        dup2(pipefd[1], fileno(stdout));
         ret = execl("/bin/file", "file", "--mime-type", "-b", file_name, (char *)NULL);
         if (ret == -1) {
             perror("execl");
@@ -137,7 +137,6 @@ void send_content(char file_name[], int cfd) {
     ssize_t size = dc_read(fd, &byte, 1);
     while (size > 0) {
         dc_write(cfd, &byte, 1);
-        fprintf(stderr, "%c", byte);
         size = dc_read(fd, &byte, 1);
     }
     close(fd);
