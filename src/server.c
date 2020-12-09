@@ -1,9 +1,7 @@
 #include "dc_lib/sys/socket.h"
 #include "dc_lib/unistd.h"
-
 #include "server/pool.h"
 #include "config/config.h"
-
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>

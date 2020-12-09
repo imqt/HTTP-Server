@@ -14,16 +14,33 @@ void *dealer(void *vargp) {
         fprintf(stderr, "%s %d is dealing with client fd %d\n",(config->concurr_opt == CONCURR_OPT_THREAD) ? "Thread" : "Process", id+1, cfd);
 
         char client_request[BUF_SIZE];
+        fprintf(stderr, "============= 1\n");
         ssize_t request_len;
         while((request_len = dc_read(cfd, client_request, BUF_SIZE)) > 0)
         {
+                    fprintf(stderr, "============= 2\n");
+
             char file_name[BUF_SIZE];
+                    fprintf(stderr, "============= 3\n");
+
             strcat(file_name, config->root);
+                    fprintf(stderr, "============= 4\n");
+
             sem_post(config_mutex);
+                    fprintf(stderr, "============= 5\n");
+
             int request_code = parse_request(client_request, file_name, request_len);
+                    fprintf(stderr, "============= 6\n");
+
             if (request_code) {
+                        fprintf(stderr, "============= 7\n");
+
                 respond(cfd, file_name, request_code, config, config_mutex);
+                        fprintf(stderr, "============= 8\n");
+
             }
+                    fprintf(stderr, "============= 9\n");
+
         }
         dc_close(cfd);
     }

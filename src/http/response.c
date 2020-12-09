@@ -13,7 +13,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         strcat(file_index, config->path_home);
         construct_response(response, get_content_length(file_index), 200, file_index);
         dc_write(cfd, response, strlen(response));
-        fprintf(stderr, "== Reply file name: =========== %s\n", file_name);
+        fprintf(stderr, "== Reply file name: =========== %s\n", file_index);
         if (request_code == 5) { send_content(file_index, cfd); }
     } 
     else if ((rp = realpath(file_name, NULL))!= NULL) {
@@ -37,6 +37,7 @@ void respond(int cfd, char * file_name, int request_code, Config config, sem_t* 
         if (request_code == 5) { send_content(file_404, cfd); }
         free(rp);
     }
+    fprintf(stderr, "Done=========\n");
     sem_post(config_mutex);
 }
 
@@ -136,8 +137,8 @@ void send_content(char file_name[], int cfd) {
     ssize_t size = dc_read(fd, &byte, 1);
     while (size > 0) {
         dc_write(cfd, &byte, 1);
+        fprintf(stderr, "%c", byte);
         size = dc_read(fd, &byte, 1);
     }
     close(fd);
 }
-

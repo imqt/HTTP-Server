@@ -15,7 +15,6 @@
 #define DEFAULT_PORT 49512
 #define DEFAULT_CONNECTIONS 10
 #define DEFAULT_BACKLOG 5
-
 #define BUFF_SIZE 100000
 
 Config config_create(){
@@ -71,10 +70,14 @@ void config_set_file(Config c){
         }else if(strcmp(option, "404_FILE")==0){
             c->path_404 = value;
         }else if(strcmp(option, "CONCURRENCY")==0) {
-            if(strcmp(value, "THREADS")==0)
+            if(strcmp(value, "THREADS")==0) {
+                fprintf(stderr, "RUNNING THREADS\n");
                 c->concurr_opt = CONCURR_OPT_THREAD;
-            else if(strcmp(value, "PROCESSESS")==0)
+            }
+            else if(strcmp(value, "PROCESSES")==0) {
+                fprintf(stderr, "RUNNING PROCESSES\n");
                 c->concurr_opt = CONCURR_OPT_PROCESS;
+            }
             else{
                 fprintf(stderr, "Configuration Error: %s is not a valid concurrency option.\n", value);
             }
@@ -94,7 +97,7 @@ void config_print(const Config c){
     fprintf(stderr, "== HTML Root folder:          %s\n", c->root);
     fprintf(stderr, "== 404 page:                  %s\n", c->path_404);
     fprintf(stderr, "== Home page:                 %s\n", c->path_home);
-    fprintf(stderr, "== Concurrency:               %d %s\n", c->connections, (c->concurr_opt)?"threads":"processes");
+    fprintf(stderr, "== Concurrency:               %d %s\n", c->connections, (c->concurr_opt==CONCURR_OPT_THREAD)?"threads":"processes");
     fprintf(stderr, "== Backlog:                   %d\n", c->backlog);
     fprintf(stderr, "========= :SERVER STARTING: =========\n");
     fprintf(stderr, "Change 404_PAGE, HOME_PAGE, or ROOT with format option:value\n");

@@ -9,7 +9,6 @@ char HEAD_R[] = "HEAD";
 int parse_request(char request[], char file_name[], int request_len) {
     // Print client request to stderr
 	fprintf(stderr, "== Request:\n%s\n", request);
-
 	int request_code = get_method(request);
 	if (request_code == 0) return 0;
 	int start_index = request_code; // 5 or 6 (get or head)
