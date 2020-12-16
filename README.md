@@ -9,10 +9,11 @@ Created by:
 |[hanssy130](https://github.com/hanssy130)|Sy, Hans|A00892259|
 
 ## Required Features
+Requirement breakdown for BCIT CST COMP 4981 Advanced Networking
 - Supports HTTP 1.0
-- HTTP GET  	                     10
-- HTTP HEAD 	                     5
-- Threads 	                       10
+- HTTP GET  	                     10%
+- HTTP HEAD 	                     5%
+- Threads 	                       10%
 - Sub-Process                      10%
 - An IPC mechanism                 10%
 - Config file 	                   10%
