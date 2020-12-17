@@ -2,8 +2,8 @@
 This package provides a configurable HTTP 1.0 implemented server written in C.
 
 Created by:
-| Username | Name | Student # |
-|-|-|-|
+| Username |
+|-|
 |[imqt](https://github.com/imqt)|
 |[vvnwu](https://github.com/vvnwu)|
 |[hanssy130](https://github.com/hanssy130)|
