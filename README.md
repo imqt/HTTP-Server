@@ -4,9 +4,9 @@ This package provides a configurable HTTP 1.0 implemented server written in C.
 Created by:
 | Username | Name | Student # |
 |-|-|-|
-|[imqt](https://github.com/imqt)|Bui, Quoc Trung|A01071612|
-|[vvnwu](https://github.com/vvnwu)|Wu, Vivian|A01076716|
-|[hanssy130](https://github.com/hanssy130)|Sy, Hans|A00892259|
+|[imqt](https://github.com/imqt)|
+|[vvnwu](https://github.com/vvnwu)|
+|[hanssy130](https://github.com/hanssy130)|
 
 ## Required Features
 Requirement breakdown for BCIT CST COMP 4981 Advanced Networking
